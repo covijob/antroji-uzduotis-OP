@@ -10,7 +10,8 @@ bool try_parse_int(const std::string& tok, int& out) {
     size_t i = 0;
     if (tok[0] == '+' || tok[0] == '-') i = 1;
     if (i == tok.size()) return false;
-    for (; i < tok.size(); ++i) if (!std::isdigit((unsigned char)tok[i])) return false;
+    for (; i < tok.size(); ++i)
+        if (!std::isdigit((unsigned char)tok[i])) return false;
     try {
         long long v = std::stoll(tok);
         if (v < std::numeric_limits<int>::min() || v > std::numeric_limits<int>::max()) return false;
@@ -21,19 +22,25 @@ bool try_parse_int(const std::string& tok, int& out) {
 }
 
 void ivedimas_is_konsoles(std::vector<Studentas>& grupe) {
-    using std::string; using std::getline;
+    using std::string;
+    using std::getline;
 
     for (;;) {
         std::cout << "Iveskite: PAVARDE ir VARDA (tuscia eilute - baigti): ";
-        string line; getline(std::cin >> std::ws, line);
+        string line;
+        getline(std::cin >> std::ws, line);
         if (line.empty()) break;
 
         std::istringstream pv(line);
-        Studentas s;
-        if (!(pv >> s.pavarde >> s.vardas)) {
+        string pavarde, vardas;
+        if (!(pv >> pavarde >> vardas)) {
             std::cout << "Nerasta pavarde/vardas. Bandykite dar.\n";
             continue;
         }
+
+        Studentas s;
+        s.setPavarde(pavarde);
+        s.setVardas(vardas);
 
         std::cout << "Iveskite ND pazymius VIENOJE eiluteje (pvz.: 10 9 8). Tuscia eilute - pabaiga: ";
         getline(std::cin, line);
@@ -42,8 +49,12 @@ void ivedimas_is_konsoles(std::vector<Studentas>& grupe) {
             std::string tok;
             while (nds >> tok) {
                 int v;
-                if (try_parse_int(tok, v) && v >= 1 && v <= 10) s.nd.push_back(v);
-                else std::cout << "Ignoruojama ND reiksme: '" << tok << "'\n";
+                if (try_parse_int(tok, v) && v >= 1 && v <= 10) {
+                    s.addNd(v);
+                }
+                else {
+                    std::cout << "Ignoruojama ND reiksme: '" << tok << "'\n";
+                }
             }
         }
 
@@ -51,7 +62,11 @@ void ivedimas_is_konsoles(std::vector<Studentas>& grupe) {
             std::cout << "Egzamino pazymys (1-10): ";
             getline(std::cin, line);
             std::istringstream es(line);
-            if (es >> s.egzaminas && s.egzaminas >= 1 && s.egzaminas <= 10) break;
+            int egz;
+            if (es >> egz && egz >= 1 && egz <= 10) {
+                s.setEgzaminas(egz);
+                break;
+            }
             std::cout << "Neteisinga ivestis. Bandykite dar.\n";
         }
 
@@ -78,19 +93,30 @@ bool skaityti_is_failo(const std::string& path, std::vector<Studentas>& grupe) {
         if (eilute.find_first_not_of(" \t\r\n") == std::string::npos) continue;
 
         std::istringstream iss(eilute);
-        Studentas s;
-        if (!(iss >> s.pavarde >> s.vardas)) continue;
+        std::string pavarde, vardas;
+        if (!(iss >> pavarde >> vardas)) continue;
 
         std::vector<int> visi;
         std::string tok;
         while (iss >> tok) {
             int v;
-            if (try_parse_int(tok, v) && v >= 1 && v <= 10) visi.push_back(v);
+            if (try_parse_int(tok, v) && v >= 1 && v <= 10) {
+                visi.push_back(v);
+            }
         }
         if (visi.empty()) continue;
 
-        s.egzaminas = visi.back();
-        s.nd.assign(visi.begin(), visi.end() - 1);
+        int egz = visi.back();
+        visi.pop_back(); 
+
+        Studentas s;
+        s.setPavarde(pavarde);
+        s.setVardas(vardas);
+        s.setEgzaminas(egz);
+        s.clearNd();
+        for (int v : visi) {
+            s.addNd(v);
+        }
 
         grupe.push_back(std::move(s));
     }

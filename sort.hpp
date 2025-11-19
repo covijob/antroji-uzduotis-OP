@@ -2,12 +2,12 @@
 #include "studentai.hpp"
 
 inline bool less_pavarde_vardas(const Studentas& a, const Studentas& b) {
-    if (a.pavarde != b.pavarde) return a.pavarde < b.pavarde;
-    return a.vardas < b.vardas;
+    if (a.pavarde() != b.pavarde()) return a.pavarde() < b.pavarde();
+    return a.vardas() < b.vardas();
 }
 inline bool less_vardas_pavarde(const Studentas& a, const Studentas& b) {
-    if (a.vardas != b.vardas) return a.vardas < b.vardas;
-    return a.pavarde < b.pavarde;
+    if (a.vardas() != b.vardas()) return a.vardas() < b.vardas();
+    return a.pavarde()< b.pavarde();
 }
 
 template <class T, class Less>

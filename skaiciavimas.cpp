@@ -17,9 +17,9 @@ double mediana(std::vector<int> a) {
 }
 
 double galutinis_vidurkis(const Studentas& s) {
-    return 0.4 * vidurkis(s.nd) + 0.6 * s.egzaminas;
+    return 0.4 * vidurkis(s.nd()) + 0.6 * s.egzaminas();
 }
 
 double galutinis_mediana(const Studentas& s) {
-    return 0.4 * mediana(s.nd) + 0.6 * s.egzaminas;
+    return 0.4 * mediana(s.nd()) + 0.6 * s.egzaminas();
 }

@@ -131,8 +131,12 @@
     <ClCompile Include="ivestis.cpp" />
     <ClCompile Include="Pirmoji-uzduotis.cpp" />
     <ClCompile Include="skaiciavimas.cpp" />
-    <ClCompile Include="streaming.cpp" />
-    <ClCompile Include="v03_api.cpp" />
+    <ClCompile Include="streaming.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="v03_api.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="v03_api.hpp" />
     <ClCompile Include="v03_runner.hpp" />
   </ItemGroup>

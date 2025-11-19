@@ -49,8 +49,8 @@ void failo_formatavimas(const std::string& failo_vardas,
         const double gVid = galutinis_vidurkis(s);
         const double gMed = galutinis_mediana(s);
 
-        print_col(out, s.pavarde, 15);
-        print_col(out, s.vardas, 15);
+        print_col(out, s.pavarde(), 15);
+        print_col(out, s.vardas(), 15);
 
         if (vartotojo_pasirinkimas == 1) {
             out << std::right << std::setw(8) << gVid << "\n";

@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <istream> 
+#include <cstdio>  
 
 class Studentas {
 public:
@@ -39,6 +41,34 @@ public:
     inline const std::vector<int>& nd() const { return nd_; }
     inline int egzaminas() const { return egzaminas_; }
 
+    void setVardas(const std::string& v) { vardas_ = v; }
+    void setPavarde(const std::string& p) { pavarde_ = p; }
+
+    void clearNd() { nd_.clear(); }
+    void addNd(int v) { nd_.push_back(v); }
+
+    void setEgzaminas(int v) { egzaminas_ = v; }
+
+    std::istream& readStudent(std::istream& is) {
+        is >> vardas_ >> pavarde_;
+
+        nd_.clear();
+        int x;
+        while (is >> x) {
+            nd_.push_back(x);
+            if (is.peek() == '\n' || is.peek() == EOF) break;
+        }
+
+        if (!nd_.empty()) {
+            egzaminas_ = nd_.back();
+            nd_.pop_back();
+        }
+        else {
+            egzaminas_ = 0;
+        }
+
+        return is;
+    }
 
 private:
     std::string vardas_;

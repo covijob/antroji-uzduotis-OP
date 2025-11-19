@@ -10,8 +10,8 @@
 #include <chrono>
 #include <string>
 
-#include "ivestis.hpp"     // try_parse_int
-#include "formatas.hpp"    // print_col
+#include "ivestis.hpp" 
+#include "formatas.hpp" 
 
 namespace {
     using clock = std::chrono::steady_clock;
