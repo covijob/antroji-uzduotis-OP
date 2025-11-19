@@ -39,7 +39,7 @@
     <ClCompile Include="v03_api.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="bench_auto.cpp">
+    <ClCompile Include="Pirmoji-uzduotis.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
