@@ -1,4 +1,4 @@
-﻿*#include <iostream>
+﻿#include <iostream>
 #include <fstream>
 #include <iomanip>
 #include <vector>
@@ -44,7 +44,7 @@ int main() {
         std::mt19937 rng(std::random_device{}());
         std::uniform_int_distribution<int> distK(6, 7);
         int K = distK(rng);
-
+        
         std::vector<std::size_t> N_list = { 1000, 10000, 100000, 1000000, 10000000 };
 
         std::cout << "Generavimas (K=" << K << "):\n";
