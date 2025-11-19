@@ -11,6 +11,7 @@
 #include <cstdlib>
 #include <chrono>
 #include <thread>
+#include <filesystem>
 
 #include "studentai.hpp"
 #include "skaiciavimas.hpp"
@@ -27,6 +28,7 @@ int main() {
     auto ms = [](auto dt) { return std::chrono::duration_cast<std::chrono::milliseconds>(dt).count(); };
 
     std::ios::sync_with_stdio(false);
+    namespace fs = std::filesystem;
 
     std::string pr = "studentai1.txt";
     int pasirinktas_saltinis = 1;
@@ -39,11 +41,44 @@ int main() {
 
     std::vector<std::string> sugeneruoti;
 
+    if (pasirinktas_saltinis == 1) {
+        std::vector<std::string> visi_txt;
+        for (const auto& entry : fs::directory_iterator(".")) {
+            if (!entry.is_regular_file()) continue;
+            auto path = entry.path();
+            if (path.extension() == ".txt") {
+                visi_txt.push_back(path.filename().string());
+            }
+        }
+
+        if (visi_txt.empty()) {
+            std::cout << "Aplanke nerasta .txt failu. Naudojamas numatytasis: " << pr << "\n";
+        }
+        else {
+            std::sort(visi_txt.begin(), visi_txt.end());
+            std::cout << "Rasti .txt failai:\n";
+            for (std::size_t i = 0; i < visi_txt.size(); ++i) {
+                std::cout << i + 1 << " - " << visi_txt[i] << "\n";
+            }
+            std::cout << "Pasirinkite faila pagal numeri: ";
+            int pasirinktas_failas = 0;
+            while (!(std::cin >> pasirinktas_failas) ||
+                pasirinktas_failas < 1 ||
+                pasirinktas_failas > static_cast<int>(visi_txt.size())) {
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                std::cout << "Blogas pasirinkimas. Bandykite dar karta: ";
+            }
+            pr = visi_txt[pasirinktas_failas - 1];
+            std::cout << ">> Pasirinktas failas: " << pr << "\n";
+        }
+    }
+
     if (pasirinktas_saltinis == 2) {
         std::mt19937 rng(std::random_device{}());
         std::uniform_int_distribution<int> distK(6, 7);
         int K = distK(rng);
-        
+
         std::vector<std::size_t> N_list = { 1000, 10000, 100000, 1000000, 10000000 };
 
         std::cout << "Generavimas (K=" << K << "):\n";
@@ -130,7 +165,6 @@ int main() {
             }
             return 0;
         }
-
 
         if (versija == 1) {
             long long t_read_ms = 0, t_split_ms = 0, t_write_ms = 0;

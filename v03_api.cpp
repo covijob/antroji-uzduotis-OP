@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <chrono>
 #include <iostream>
+#include <type_traits>
 
 static inline double galutinis_by_method(const Studentas& s, int method) {
     if (method == 2) return galutinis_mediana(s);
@@ -49,6 +50,7 @@ void split_groups(ContainerT<Tag, Studentas>& all,
     ContainerT<Tag, Studentas>& kiet,
     int method,
     long long* out_split_ms) {
+
     auto t0 = std::chrono::steady_clock::now();
 
     varg.clear();
@@ -78,6 +80,7 @@ void split_groups_remove(ContainerT<Tag, Studentas>& all,
     ContainerT<Tag, Studentas>& kiet,
     int method,
     long long* out_split_ms) {
+
     auto t0 = std::chrono::steady_clock::now();
 
     varg.clear();
@@ -111,6 +114,7 @@ void split_groups_inplace(ContainerT<Tag, Studentas>& all,
     ContainerT<Tag, Studentas>& kiet,
     int method,
     long long* out_split_ms) {
+
     auto t0 = std::chrono::steady_clock::now();
 
     varg.clear();
@@ -139,13 +143,12 @@ void split_groups_inplace(ContainerT<Tag, Studentas>& all,
     if (out_split_ms) *out_split_ms = std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count();
 }
 
-
-
 template<typename Tag>
 void sort_groups(ContainerT<Tag, Studentas>& varg,
     ContainerT<Tag, Studentas>& kiet,
     int rikiavimas,
     long long* out_sort_ms) {
+
     auto t0 = std::chrono::steady_clock::now();
 
     if constexpr (std::is_same_v<Tag, VectorTag>) {
@@ -178,6 +181,7 @@ void write_groups(const ContainerT<Tag, Studentas>& varg,
     const ContainerT<Tag, Studentas>& kiet,
     int method,
     long long* out_write_ms) {
+
     auto t0 = std::chrono::steady_clock::now();
 
     if constexpr (std::is_same_v<Tag, VectorTag>) {
@@ -210,18 +214,3 @@ template void split_groups_remove<VectorTag>(ContainerT<VectorTag, Studentas>&, 
 template void split_groups_remove<ListTag>(ContainerT<ListTag, Studentas>&, ContainerT<ListTag, Studentas>&, ContainerT<ListTag, Studentas>&, int, long long*);
 template void split_groups_inplace<VectorTag>(ContainerT<VectorTag, Studentas>&, ContainerT<VectorTag, Studentas>&, ContainerT<VectorTag, Studentas>&, int, long long*);
 template void split_groups_inplace<ListTag>(ContainerT<ListTag, Studentas>&, ContainerT<ListTag, Studentas>&, ContainerT<ListTag, Studentas>&, int, long long*);
-
-template<typename Tag>
-void split_groups_remove(ContainerT<Tag, Studentas>& all,
-ContainerT<Tag, Studentas>& varg,
-ContainerT<Tag, Studentas>& kiet,
-int method,
-long long* out_split_ms);
-
-template<typename Tag>
-void split_groups_inplace(ContainerT<Tag, Studentas>& all,
-ContainerT<Tag, Studentas>& varg,
-ContainerT<Tag, Studentas>& kiet,
-int method,
-long long* out_split_ms);
-
