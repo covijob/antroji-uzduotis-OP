@@ -2,44 +2,47 @@
 #include <string>
 #include <vector>
 
-#pragma once
-#include <string>
-#include <vector>
-
 class Studentas {
 public:
     Studentas()
-        : vardas{}, pavarde{}, nd{}, egzaminas{ 0 } {
+        : vardas_{}, pavarde_{}, nd_{}, egzaminas_{ 0 } {
     }
 
     Studentas(const std::string& vardas,
         const std::string& pavarde,
         const std::vector<int>& nd,
         int egzaminas)
-        : vardas{ vardas }, pavarde{ pavarde }, nd{ nd }, egzaminas{ egzaminas } {
+        : vardas_{ vardas }, pavarde_{ pavarde }, nd_{ nd }, egzaminas_{ egzaminas } {
     }
 
     Studentas(const Studentas& other)
-        : vardas{ other.vardas },
-        pavarde{ other.pavarde },
-        nd{ other.nd },
-        egzaminas{ other.egzaminas } {
+        : vardas_{ other.vardas_ },
+        pavarde_{ other.pavarde_ },
+        nd_{ other.nd_ },
+        egzaminas_{ other.egzaminas_ } {
     }
 
     Studentas& operator=(const Studentas& other) {
         if (this != &other) {
-            vardas = other.vardas;
-            pavarde = other.pavarde;
-            nd = other.nd;
-            egzaminas = other.egzaminas;
+            vardas_ = other.vardas_;
+            pavarde_ = other.pavarde_;
+            nd_ = other.nd_;
+            egzaminas_ = other.egzaminas_;
         }
         return *this;
     }
 
     ~Studentas() = default;
 
-    std::string vardas;
-    std::string pavarde;
-    std::vector<int> nd;
-    int egzaminas;
+    inline const std::string& vardas()  const { return vardas_; }
+    inline const std::string& pavarde() const { return pavarde_; }
+    inline const std::vector<int>& nd() const { return nd_; }
+    inline int egzaminas() const { return egzaminas_; }
+
+
+private:
+    std::string vardas_;
+    std::string pavarde_;
+    std::vector<int> nd_;
+    int egzaminas_;
 };
