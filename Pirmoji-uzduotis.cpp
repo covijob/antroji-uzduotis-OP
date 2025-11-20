@@ -233,13 +233,11 @@ int main() {
     kietiakiai.reserve(grupe.size());
 
     for (const auto& s : grupe) {
-        double galutinis;
-        if (vartotojo_pasirinkimas == 1) galutinis = galutinis_vidurkis(s);
-        else if (vartotojo_pasirinkimas == 2) galutinis = galutinis_mediana(s);
-        else                                   galutinis = galutinis_vidurkis(s);
+        double galutinis = s.galutinis(vartotojo_pasirinkimas);
         if (galutinis < 5.0) vargsiukai.push_back(s);
-        else                 kietiakiai.push_back(s);
+        else kietiakiai.push_back(s);
     }
+    
     auto t_split1 = clock::now();
     std::cout << "Skirstymas i dvi kategorijas: "
         << ms(t_split1 - t_split0) << " ms.  (Vargsiukai: "

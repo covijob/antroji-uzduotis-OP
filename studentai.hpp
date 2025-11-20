@@ -3,6 +3,8 @@
 #include <vector>
 #include <istream> 
 #include <cstdio>  
+#include <algorithm>
+
 
 class Studentas {
 public:
@@ -68,6 +70,31 @@ public:
         }
 
         return is;
+    }
+
+    double galutinis(int metodas) const {
+        if (metodas == 2) return mediana();
+        return vidurkis();
+    }
+
+    double vidurkis() const {
+        if (nd_.empty()) return egzaminas_;
+        double suma = 0.0;
+        for (int v : nd_) suma += v;
+        return 0.4 * (suma / nd_.size()) + 0.6 * egzaminas_;
+    }
+
+    double mediana() const {
+        if (nd_.empty()) return egzaminas_;
+        std::vector<int> temp = nd_;
+        std::sort(temp.begin(), temp.end());
+        double m;
+        size_t n = temp.size();
+        if (n % 2 == 0)
+            m = (temp[n / 2 - 1] + temp[n / 2]) / 2.0;
+        else
+            m = temp[n / 2];
+        return 0.4 * m + 0.6 * egzaminas_;
     }
 
 private:

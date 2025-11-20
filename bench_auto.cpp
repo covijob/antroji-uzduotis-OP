@@ -19,9 +19,9 @@ static inline long long ms(Steady::time_point a, Steady::time_point b) {
 }
 
 static inline double grade_by(int method, const Studentas& s) {
-    if (method == 2) return galutinis_mediana(s);
-    return galutinis_vidurkis(s);
+    return s.galutinis(method);
 }
+
 
 static void try_collect_from(const fs::path& dir, std::vector<std::string>& out) {
     std::error_code ec;

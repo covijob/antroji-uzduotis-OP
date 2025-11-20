@@ -10,11 +10,6 @@
 #include <iostream>
 #include <type_traits>
 
-static inline double galutinis_by_method(const Studentas& s, int method) {
-    if (method == 2) return galutinis_mediana(s);
-    return galutinis_vidurkis(s);
-}
-
 template<typename Tag>
 ContainerT<Tag, Studentas> read_all(const std::string& path, long long* out_read_ms) {
     auto t0 = std::chrono::steady_clock::now();
@@ -62,8 +57,9 @@ void split_groups(ContainerT<Tag, Studentas>& all,
     }
 
     auto is_varg = [method](const Studentas& s) {
-        return galutinis_by_method(s, method) < 5.0;
+        return s.galutinis(method) < 5.0;
         };
+
 
     std::partition_copy(all.begin(), all.end(),
         std::back_inserter(varg),
@@ -91,12 +87,9 @@ void split_groups_remove(ContainerT<Tag, Studentas>& all,
     }
 
     auto is_varg = [method](const Studentas& s) {
-        double g;
-        if (method == 1) g = galutinis_vidurkis(s);
-        else if (method == 2) g = galutinis_mediana(s);
-        else g = galutinis_vidurkis(s);
-        return g < 5.0;
+        return s.galutinis(method) < 5.0;
         };
+
 
     std::copy_if(all.begin(), all.end(), std::back_inserter(varg), is_varg);
 
@@ -125,12 +118,9 @@ void split_groups_inplace(ContainerT<Tag, Studentas>& all,
     std::cin >> stable;
 
     auto is_varg = [method](const Studentas& s) {
-        double g;
-        if (method == 1) g = galutinis_vidurkis(s);
-        else if (method == 2) g = galutinis_mediana(s);
-        else g = galutinis_vidurkis(s);
-        return g < 5.0;
+        return s.galutinis(method) < 5.0;
         };
+
 
     auto mid = stable
         ? std::stable_partition(all.begin(), all.end(), is_varg)
