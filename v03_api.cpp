@@ -3,12 +3,14 @@
 #include "skaiciavimas.hpp"
 #include "sort.hpp"
 #include "formatas.hpp"
+#include "konteineriu_pasirinkimas.hpp"
 
 #include <vector>
 #include <list>
 #include <algorithm>
 #include <chrono>
 #include <type_traits>
+#include <iterator>
 
 using clock_type = std::chrono::steady_clock;
 
@@ -39,13 +41,7 @@ ContainerT<Tag, Studentas> read_all(const std::string& path, int method, long lo
     auto start = clock_type::now();
 
     ContainerT<Tag, Studentas> c;
-
-    if constexpr (std::is_same_v<Tag, VectorTag>) {
-        skaityti_is_failo(path, c, method);
-    }
-    else {
-        skaityti_is_failo(path, c, method);
-    }
+    skaityti_is_failo(path, c, method);
 
     auto end = clock_type::now();
     if (out_read_ms) {
@@ -71,28 +67,55 @@ void split_groups(ContainerT<Tag, Studentas>& all,
     kiet.clear();
 
     if constexpr (std::is_same_v<Tag, VectorTag>) {
-        varg.reserve(all.size());
-        kiet.reserve(all.size());
-    }
-
-    if (strategija == 1) {
-        for (const auto& s : all) {
-            if (is_varg(s)) varg.push_back(s);
-            else kiet.push_back(s);
+        if (strategija == 1) {
+            varg.reserve(all.size());
+            kiet.reserve(all.size());
+            for (const auto& s : all) {
+                if (is_varg(s)) varg.push_back(s);
+                else            kiet.push_back(s);
+            }
         }
-    }
-    else if (strategija == 2) {
-        for (const auto& s : all) {
-            if (is_varg(s)) varg.push_back(s);
+        else if (strategija == 2 || strategija == 3) {
+            varg.reserve(all.size());
+            for (const auto& s : all) {
+                if (is_varg(s)) varg.push_back(s);
+            }
+            auto it = std::remove_if(all.begin(), all.end(), is_varg);
+            all.erase(it, all.end());
+            kiet.swap(all);
         }
-        auto it = std::remove_if(all.begin(), all.end(), is_varg);
-        all.erase(it, all.end());
-        kiet.swap(all);
     }
     else {
-        auto it = std::stable_partition(all.begin(), all.end(), is_varg);
-        varg.assign(all.begin(), it);
-        kiet.assign(it, all.end());
+        if (strategija == 1) {
+            for (const auto& s : all) {
+                if (is_varg(s)) varg.push_back(s);
+                else            kiet.push_back(s);
+            }
+        }
+        else if (strategija == 2) {
+            auto it = all.begin();
+            while (it != all.end()) {
+                if (is_varg(*it)) {
+                    varg.push_back(*it);
+                    it = all.erase(it);
+                }
+                else {
+                    ++it;
+                }
+            }
+            kiet = all;
+        }
+        else if (strategija == 3) {
+            auto it = all.begin();
+            while (it != all.end()) {
+                auto next = std::next(it);
+                if (is_varg(*it)) {
+                    varg.splice(varg.end(), all, it);
+                }
+                it = next;
+            }
+            kiet.splice(kiet.end(), all);
+        }
     }
 
     auto end = clock_type::now();
@@ -136,15 +159,11 @@ void write_groups(const ContainerT<Tag, Studentas>& varg,
 {
     auto start = clock_type::now();
 
-    std::vector<Studentas> v_varg, v_kiet;
-    if constexpr (std::is_same_v<Tag, VectorTag>) {
-        v_varg.assign(varg.begin(), varg.end());
-        v_kiet.assign(kiet.begin(), kiet.end());
-    }
-    else {
-        v_varg.assign(varg.begin(), varg.end());
-        v_kiet.assign(kiet.begin(), kiet.end());
-    }
+    std::vector<Studentas> v_varg;
+    std::vector<Studentas> v_kiet;
+
+    v_varg.assign(varg.begin(), varg.end());
+    v_kiet.assign(kiet.begin(), kiet.end());
 
     failo_formatavimas("vargsiukai.txt", v_varg, method);
     failo_formatavimas("kietiakiai.txt", v_kiet, method);

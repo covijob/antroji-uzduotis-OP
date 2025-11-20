@@ -119,6 +119,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -131,7 +132,6 @@
     <ClCompile Include="ivestis.cpp" />
     <ClCompile Include="Pirmoji-uzduotis.cpp" />
     <ClCompile Include="skaiciavimas.cpp" />
-    <ClCompile Include="streaming.cpp" />
     <ClCompile Include="v03_api.cpp" />
     <ClCompile Include="v03_api.hpp" />
     <ClCompile Include="v03_runner.hpp" />
@@ -148,7 +148,6 @@
     <ClInclude Include="konteineriu_pasirinkimas.hpp" />
     <ClInclude Include="skaiciavimas.hpp" />
     <ClInclude Include="sort.hpp" />
-    <ClInclude Include="streaming.hpp" />
     <ClInclude Include="studentai.hpp" />
   </ItemGroup>
   <ItemGroup>

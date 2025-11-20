@@ -1,22 +1,7 @@
 #include "formatas.hpp"
-#include "skaiciavimas.hpp"
 #include <fstream>
 #include <iomanip>
 #include <iostream>
-
-std::size_t u8len(const std::string& s) {
-    std::size_t n = 0;
-    for (unsigned char c : s) {
-        if ((c & 0xC0) != 0x80) ++n;
-    }
-    return n;
-}
-
-void print_col(std::ostream& out, const std::string& text, std::size_t width) {
-    out << text;
-    std::size_t len = u8len(text);
-    if (len < width) out << std::string(width - len, ' ');
-}
 
 void failo_formatavimas(const std::string& failo_vardas,
     const std::vector<Studentas>& grupe,
@@ -28,39 +13,31 @@ void failo_formatavimas(const std::string& failo_vardas,
         return;
     }
 
-    print_col(out, "Pavarde", 20);
-    print_col(out, "Vardas", 20);
+    out << std::left << std::setw(20) << "Pavarde"
+        << std::left << std::setw(20) << "Vardas";
 
     if (vartotojo_pasirinkimas == 1) {
-        print_col(out, "Galutinis (Vid.)", 18);
+        out << std::left << std::setw(20) << "Galutinis (Vid.)";
     }
     else if (vartotojo_pasirinkimas == 2) {
-        print_col(out, "Galutinis (Med.)", 18);
+        out << std::left << std::setw(20) << "Galutinis (Med.)";
     }
     else {
-        print_col(out, "Galutinis (Vid.)", 18);
-        print_col(out, "Galutinis (Med.)", 18);
+        out << std::left << std::setw(20) << "Galutinis";
     }
-    out << "\n";
+
+    out << '\n';
+
+    out << std::string(60, '-') << '\n';
+
+    out << std::fixed << std::setprecision(2);
 
     for (const auto& s : grupe) {
-        print_col(out, s.pavarde, 20);
-        print_col(out, s.vardas, 20);
-
-        double gVid = galutinis_vidurkis(s);
-        double gMed = galutinis_mediana(s);
-
-        if (vartotojo_pasirinkimas == 1) {
-            out << std::right << std::setw(8) << gVid << "\n";
-        }
-        else if (vartotojo_pasirinkimas == 2) {
-            out << std::right << std::setw(8) << gMed << "\n";
-        }
-        else {
-            out << std::right << std::setw(8) << gVid;
-            out << std::string(10, ' ');
-            out << std::right << std::setw(8) << gMed << "\n";
-        }
+        out << std::left << std::setw(20) << s.pavarde
+            << std::left << std::setw(20) << s.vardas
+            << std::setw(20) << s.galutinis
+            << '\n';
     }
+
     std::cout << "Rezultatai issaugoti faile: " << failo_vardas << "\n";
 }

@@ -8,6 +8,22 @@
 #include "konteineriu_pasirinkimas.hpp"
 #include "generatorius.hpp"
 
+std::size_t nustatyti_eiluciu_kieki(const std::string& failas) {
+    std::string pref = "studentai_";
+    auto p = failas.find(pref);
+    if (p == std::string::npos) return 0;
+    p += pref.size();
+    auto k = failas.find_first_not_of("0123456789", p);
+    if (k == std::string::npos) return 0;
+    std::string sk = failas.substr(p, k - p);
+    try {
+        return static_cast<std::size_t>(std::stoll(sk));
+    }
+    catch (...) {
+        return 0;
+    }
+}
+
 int main() {
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
@@ -62,6 +78,7 @@ int main() {
     }
 
     std::string failas = failai[pasirinktas - 1];
+    std::size_t n_eiluciu = nustatyti_eiluciu_kieki(failas);
 
     int kont = 0;
     int strategija = 0;
@@ -69,6 +86,9 @@ int main() {
     int rikiavimas = 1;
 
     std::cout << "\nPasirinktas failas: " << failas << "\n";
+    if (n_eiluciu > 0) {
+        std::cout << "Apskaiciuota eiluciu: " << n_eiluciu << "\n";
+    }
 
     std::cout << "Pasirinkite konteineri (1 - vector, 2 - list): ";
     std::cin >> kont;
