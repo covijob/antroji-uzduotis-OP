@@ -1,19 +1,19 @@
 #include "skaiciavimas.hpp"
 #include <algorithm>
 
-double vidurkis(const std::vector<int>& a) {
-    if (a.empty()) return 0.0;
-    long long s = 0;
-    for (int x : a) s += x;
-    return static_cast<double>(s) / a.size();
+double vidurkis(const std::vector<int>& pazymiai) {
+    if (pazymiai.empty()) return 0.0;
+    double sum = 0.0;
+    for (int v : pazymiai) sum += v;
+    return sum / pazymiai.size();
 }
 
-double mediana(std::vector<int> a) {
-    if (a.empty()) return 0.0;
-    std::sort(a.begin(), a.end());
-    size_t n = a.size();
-    if (n % 2 == 0) return (a[n / 2 - 1] + a[n / 2]) / 2.0;
-    else return a[n / 2];
+double mediana(std::vector<int> pazymiai) {
+    if (pazymiai.empty()) return 0.0;
+    std::sort(pazymiai.begin(), pazymiai.end());
+    size_t n = pazymiai.size();
+    if (n % 2 == 0) return (pazymiai[n / 2 - 1] + pazymiai[n / 2]) * 0.5;
+    return pazymiai[n / 2];
 }
 
 double galutinis_vidurkis(const Studentas& s) {
@@ -22,4 +22,9 @@ double galutinis_vidurkis(const Studentas& s) {
 
 double galutinis_mediana(const Studentas& s) {
     return 0.4 * mediana(s.nd) + 0.6 * s.egzaminas;
+}
+
+void apskaiciuoti_galutini(Studentas& s, int method) {
+    if (method == 2) s.galutinis = galutinis_mediana(s);
+    else s.galutinis = galutinis_vidurkis(s);
 }

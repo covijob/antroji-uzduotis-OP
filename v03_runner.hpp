@@ -1,4 +1,5 @@
 ﻿#pragma once
+
 #include <iostream>
 #include <type_traits>
 #include <string>
@@ -7,41 +8,15 @@
 #include "v03_api.hpp"
 
 template<typename Tag>
-void split_groups_remove(ContainerT<Tag, Studentas>& all,
-    ContainerT<Tag, Studentas>& varg,
-    ContainerT<Tag, Studentas>& kiet,
-    int method,
-    long long* out_split_ms);
-
-template<typename Tag>
-void split_groups_inplace(ContainerT<Tag, Studentas>& all,
-    ContainerT<Tag, Studentas>& varg,
-    ContainerT<Tag, Studentas>& kiet,
-    int method,
-    long long* out_split_ms);
-
-template<typename Tag>
-void run_v03(const std::string& path, int method, int rikiavimas) {
+void run_v03(const std::string& failas, int strategija, int method, int rikiavimas) {
     long long t_read = 0, t_split = 0, t_sort = 0, t_write = 0;
 
-    auto all = read_all<Tag>(path, &t_read);
+    auto all = read_all<Tag>(failas, method, &t_read);
 
-    ContainerT<Tag, Studentas> varg, kiet;
+    ContainerT<Tag, Studentas> varg;
+    ContainerT<Tag, Studentas> kiet;
 
-    int strategija = 1;
-    std::cout << "Pasirinkite skaidymo strategija (1 - partition_copy, 2 - remove_if, 3 - partition): ";
-    std::cin >> strategija;
-
-    if (strategija == 1) {
-        split_groups<Tag>(all, varg, kiet, method, &t_split);
-    }
-    else if (strategija == 2) {
-        split_groups_remove<Tag>(all, varg, kiet, method, &t_split);
-    }
-    else {
-        split_groups_inplace<Tag>(all, varg, kiet, method, &t_split);
-    }
-
+    split_groups<Tag>(all, varg, kiet, strategija, &t_split);
     sort_groups<Tag>(varg, kiet, rikiavimas, &t_sort);
     write_groups<Tag>(varg, kiet, method, &t_write);
 
@@ -57,4 +32,10 @@ void run_v03(const std::string& path, int method, int rikiavimas) {
     }
 
     std::cout << "---------------------------------------\n";
+}
+
+template<typename Tag>
+void run_v03(const std::string& failas, int method, int rikiavimas) {
+    int strategija = 3;
+    run_v03<Tag>(failas, strategija, method, rikiavimas);
 }

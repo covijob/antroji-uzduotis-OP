@@ -1,4 +1,6 @@
 ﻿#include "ivestis.hpp"
+
+#include "skaiciavimas.hpp"
 #include <iostream>
 #include <fstream>
 #include <limits>
@@ -7,59 +9,54 @@
 
 bool try_parse_int(const std::string& tok, int& out) {
     if (tok.empty()) return false;
-    size_t i = 0;
+    std::size_t i = 0;
     if (tok[0] == '+' || tok[0] == '-') i = 1;
     if (i == tok.size()) return false;
-    for (; i < tok.size(); ++i) if (!std::isdigit((unsigned char)tok[i])) return false;
+    for (; i < tok.size(); ++i) {
+        if (!std::isdigit((unsigned char)tok[i])) return false;
+    }
     try {
         long long v = std::stoll(tok);
         if (v < std::numeric_limits<int>::min() || v > std::numeric_limits<int>::max()) return false;
-        out = (int)v;
+        out = static_cast<int>(v);
         return true;
     }
-    catch (...) { return false; }
+    catch (...) {
+        return false;
+    }
 }
 
 void ivedimas_is_konsoles(std::vector<Studentas>& grupe) {
-    using std::string; using std::getline;
+    grupe.clear();
 
-    for (;;) {
-        std::cout << "Iveskite: PAVARDE ir VARDA (tuscia eilute - baigti): ";
-        string line; getline(std::cin >> std::ws, line);
-        if (line.empty()) break;
+    int n;
+    std::cout << "Iveskite studentu skaiciu: ";
+    if (!(std::cin >> n) || n <= 0) {
+        std::cout << "Neteisingas skaicius.\n";
+        return;
+    }
 
-        std::istringstream pv(line);
+    for (int i = 0; i < n; ++i) {
         Studentas s;
-        if (!(pv >> s.pavarde >> s.vardas)) {
-            std::cout << "Nerasta pavarde/vardas. Bandykite dar.\n";
-            continue;
+        std::cout << "Iveskite " << (i + 1) << "-ojo studento pavarde ir varda: ";
+        std::cin >> s.pavarde >> s.vardas;
+
+        int nd_kiekis;
+        std::cout << "Kiek namu darbu pazymiu? ";
+        std::cin >> nd_kiekis;
+        s.nd.clear();
+        s.nd.reserve(nd_kiekis);
+        std::cout << "Iveskite " << nd_kiekis << " pazymius: ";
+        for (int j = 0; j < nd_kiekis; ++j) {
+            int v;
+            std::cin >> v;
+            s.nd.push_back(v);
         }
 
-        std::cout << "Iveskite ND pazymius VIENOJE eiluteje (pvz.: 10 9 8). Tuscia eilute - pabaiga: ";
-        getline(std::cin, line);
-        if (!line.empty()) {
-            std::istringstream nds(line);
-            std::string tok;
-            while (nds >> tok) {
-                int v;
-                if (try_parse_int(tok, v) && v >= 1 && v <= 10) s.nd.push_back(v);
-                else std::cout << "Ignoruojama ND reiksme: '" << tok << "'\n";
-            }
-        }
-
-        for (;;) {
-            std::cout << "Egzamino pazymys (1-10): ";
-            getline(std::cin, line);
-            std::istringstream es(line);
-            if (es >> s.egzaminas && s.egzaminas >= 1 && s.egzaminas <= 10) break;
-            std::cout << "Neteisinga ivestis. Bandykite dar.\n";
-        }
+        std::cout << "Iveskite egzamino pazymi: ";
+        std::cin >> s.egzaminas;
 
         grupe.push_back(std::move(s));
-
-        std::cout << "Prideta. Enter - prideti kita, arba iveskite 'q' baigti: ";
-        getline(std::cin, line);
-        if (!line.empty() && (line == "q" || line == "Q")) break;
     }
 }
 
@@ -70,11 +67,13 @@ bool skaityti_is_failo(const std::string& path, std::vector<Studentas>& grupe) {
         return false;
     }
 
+    grupe.clear();
+
     std::string eilute;
-    size_t nr = 0;
+    std::size_t nr = 0;
     while (std::getline(in, eilute)) {
         ++nr;
-        if (nr == 1) continue; // praleidžiam antraštę
+        if (nr == 1) continue;
         if (eilute.find_first_not_of(" \t\r\n") == std::string::npos) continue;
 
         std::istringstream iss(eilute);
@@ -94,5 +93,21 @@ bool skaityti_is_failo(const std::string& path, std::vector<Studentas>& grupe) {
 
         grupe.push_back(std::move(s));
     }
+    return true;
+}
+
+bool skaityti_is_failo(const std::string& path, std::vector<Studentas>& grupe, int method) {
+    if (!skaityti_is_failo(path, grupe)) return false;
+    for (auto& s : grupe) {
+        apskaiciuoti_galutini(s, method);
+    }
+    return true;
+}
+
+bool skaityti_is_failo(const std::string& path, std::list<Studentas>& grupe, int method) {
+    std::vector<Studentas> tmp;
+    if (!skaityti_is_failo(path, tmp, method)) return false;
+    grupe.clear();
+    for (auto& s : tmp) grupe.push_back(std::move(s));
     return true;
 }

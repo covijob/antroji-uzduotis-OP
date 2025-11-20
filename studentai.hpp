@@ -7,4 +7,6 @@ struct Studentas {
     std::string pavarde;
     std::vector<int> nd;
     int egzaminas = 0;
+    double galutinis = 0.0;   
 };
+// is anksto skaiciuojame galutini bala

@@ -126,10 +126,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="bench_auto.cpp" />
     <ClCompile Include="formatas.cpp" />
     <ClCompile Include="generatorius.cpp" />
     <ClCompile Include="ivestis.cpp" />
+    <ClCompile Include="Pirmoji-uzduotis.cpp" />
     <ClCompile Include="skaiciavimas.cpp" />
     <ClCompile Include="streaming.cpp" />
     <ClCompile Include="v03_api.cpp" />
@@ -153,11 +153,6 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="kietiakiai.txt" />
-    <Text Include="rezultatas.txt" />
-    <Text Include="studentai1.txt" />
-    <Text Include="studentai_gen.txt" />
-    <Text Include="studentai_v1.txt" />
-    <Text Include="studentai_v1_test.txt" />
     <Text Include="vargsiukai.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,3 +1,5 @@
+//HEADER FAILU GENERAVIMUI
+
 #pragma once
 #include <string>
 #include <random>

@@ -212,7 +212,7 @@ Skaitymas: 81654 ms
 Skaidymas: 4306 ms
 Rikiavimas: 83059 ms
 Rasymas: 30956 ms
-Is viso: 199975 ms
+Is viso: 199 975 ms
 Pirmo studento atminties adresas: 00000161A8FFB080
 ---------------------------------------
 Rezultatai issaugoti faile: vargsiukai.txt
@@ -254,21 +254,21 @@ Skirstymas vykdomas vietoje, viename konteineryje naudojant `std::partition`.
 | Įrašų kiekis | Strategija 1 (`partition_copy`) | Strategija 2 (`remove_if`) | Strategija 3 (`partition`) |
 |---------------|---------------------------------|-----------------------------|-----------------------------|
 | 1 000         | 70 ms                           |                       71 ms | 78 ms                       |
-| 10 000        | 729 ms                          | 690 ms                      | 739 ms                      |
+| 10 000        | 729 ms                          | 690 ms                      | 739 ms                      
 | 100 000       | 8 262 ms                        | 7 869 ms                    | 9 321 ms                    |
 | 1 000 000     | 86 714 ms                       | 88 835 ms                   | 95 620 ms                   |
+| 10 000 000    | - 
 
----
 
 ### Rezultatai naudojant `std::list`
 
 | Įrašų kiekis | Strategija 1 (`partition_copy`) | Strategija 2 (`remove_if`) | Strategija 3 (`partition`) |
 |---------------|---------------------------------|-----------------------------|-----------------------------|
-| 1 000         | 64 ms                           | 68 ms                       | 73 ms |
-| 10 000        | 579 ms                          |                      600 ms | 631 ms | 
-| 100 000       | 6 243 ms                        |                    6 261 ms | 6 336 ms |
-| 1 000 000     | 61 407 ms                       | 61 038 ms                   | 61 994 ms |
-
+| 1 000         | 64 ms                           | 68 ms                       | 73 ms
+| 10 000        | 579 ms                          | 600 ms |                    | 631 ms 
+| 100 000       | 6 243 ms                        | 6 261 ms                    | 6 336 ms
+| 1 000 000     | 61 407 ms                       | 61 038 ms                   | 61 994 ms 
+| 10 000 000    | 717 148ms                       | 715 006                     | 717 150 ms 
 
 ---
 
@@ -294,3 +294,79 @@ Bendra išvada:
 Efektyviausias derinys dideliems duomenų kiekiams yra `std::list` su 3 strategija (`partition`),  
 o mažesniems – `std::vector` su 2 strategija (`remove_if`).
 
+Pasirinkite duomenu saltini (1 - txt failas, 2 - atsitiktinai generuoti duomenys, 3 - rankinis ivedimas):
+__________________________________________________________
+1
+Rasti .txt failai:
+1 - kietiakiai.txt
+2 - studentai_10000000_K6.txt
+3 - studentai_1000000_K6.txt
+4 - studentai_100000_K6.txt
+5 - studentai_10000_K6.txt
+6 - studentai_1000_K6.txt
+7 - studentai_1000_K7.txt
+8 - vargsiukai.txt
+Pasirinkite faila pagal numeri: 2
+>> Pasirinktas failas: studentai_10000000_K6.txt
+Pasirinkite skaiciavimo buda (1 - vidurkis, 2 - mediana, 3 - vidurkis ir mediana):
+__________________________________________________________
+1
+Pasirinkite rikiavimo parametra (1 - studento vardas, 2 - studento pavarde)
+__________________________________________________________
+1
+Pasirinkite konteineri (1 - std::vector, 2 - std::list):
+__________________________________________________________
+2
+Pasirinkite versija (1 - v0.2 streaming, 2 - v0.3 konteineriai):
+__________________________________________________________
+2
+Ar norite paleisti visus 3 strategiju testus automatiskai? (1 - taip, 0 - ne): 1
+
+Automatinis strategiju palyginimo rezimas (v0.3):
+
+Strategija 1:
+Pasirinkite skaidymo strategija (1 - partition_copy, 2 - remove_if, 3 - partition): 3
+Naudoti stable partition (1 - taip, 0 - ne): 1
+Rezultatai issaugoti faile: vargsiukai.txt
+Rezultatai issaugoti faile: kietiakiai.txt
+Saved: vargsiukai.txt (4112096), kietiakiai.txt (5887904)
+=== v0.3 (list) ===
+Skaitymas: 283645 ms
+Skaidymas: 86534 ms
+Rikiavimas: 33255 ms
+Rasymas: 313714 ms
+Is viso: 717148 ms
+Pirmo studento atminties adresas: 000001A27604C180
+---------------------------------------
+
+Strategija 2:
+Pasirinkite skaidymo strategija (1 - partition_copy, 2 - remove_if, 3 - partition):
+3
+Naudoti stable partition (1 - taip, 0 - ne): 1
+Rezultatai issaugoti faile: vargsiukai.txt
+Rezultatai issaugoti faile: kietiakiai.txt
+Saved: vargsiukai.txt (4112096), kietiakiai.txt (5887904)
+=== v0.3 (list) ===
+Skaitymas: 1288296 ms
+Skaidymas: 77225 ms
+Rikiavimas: 20082 ms
+Rasymas: 189260 ms
+Is viso: 1574863 ms
+Pirmo studento atminties adresas: 000001A276060FE0
+---------------------------------------
+
+Strategija 3:
+Pasirinkite skaidymo strategija (1 - partition_copy, 2 - remove_if, 3 - partition): 3
+Naudoti stable partition (1 - taip, 0 - ne):
+1
+Rezultatai issaugoti faile: vargsiukai.txt
+Rezultatai issaugoti faile: kietiakiai.txt
+Saved: vargsiukai.txt (4112096), kietiakiai.txt (5887904)
+=== v0.3 (list) ===
+Skaitymas: 2186537 ms
+Skaidymas: 310560 ms
+Rikiavimas: 20597 ms
+Rasymas: 162619 ms
+Is viso: 2680313 ms
+Pirmo studento atminties adresas: 000001A276060E40
+---------------------------------------

@@ -1,3 +1,5 @@
+//GENERUOJA ATISTIKTINI FAILA
+
 #include "generatorius.hpp"
 #include <fstream>
 #include <iostream>
