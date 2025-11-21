@@ -1,46 +1,27 @@
 ﻿
-# Pirmoji užduotis – v0.3 konteinerių testavimas
+## Projekto paskirtis
 
-Šioje versijoje programa matuoja std::vector ir std::list konteinerių veikimo spartą.  
-Testuojami pagrindiniai etapai:  
-- Nuskaitymas iš failo  
-- Skirstymas į dvi grupes (vargšiukai ir kietiakiai)  
-- Rikiavimas  
-- Rašymas į failus
+Ši programa skirta apdoroti didelius studentų įrašų kiekius ir suskirstyti juos į dvi kategorijas:
 
-- Pasirenkamai įvykdomas pilnas bench mark testas.
+- Vargšiukai: studentai, kurių galutinis balas < 5  
+- Kietiakiai: studentai, kurių galutinis balas ≥ 5  
 
-### Naudojimas
->Pirmoji-uzduotis.cpp turi būti nustatyti visi reikalingi studentų failų formatavimo dydžiai(eilučių kiekis).
->Norint sugeneruoti reikalingus .txt failus nustatome *bench_runner.cpp* NEĮTRAUKTI į projektą,
-o *Pirmoji-uzduotis.cpp* privalo būti ĮTRAUKTA.
-> Paleidus programą galime pasirinkti ar norime naudoti jau sukurtą failą, generuoti naujus arba ranką įrašyti duomenis
-> Tada atliekama analizė pagal tolimiau pasirinktus parametrus
-BENCH MARK TESTAS
-> Norint plaiesti bench mark testą su atsitiktinai sugeneruotais duomenimis *bench_runner.cpp* ĮTRAUKIAME į projektą,
-o *Pirmoji-uzduotis.cpp* nustatome NEĮTRAUKTI.
-> Tada galime paleisti programą ir su sugeneruotais failais bus vykdomas bench mark testas, kuris nustatys veiksmų su failais laikus.
-BENCH v1.0
->Siekiant atlikti testą (v1.0) darome tą patį tik su *bench_auto.cpp*
+Naudojami du skirtingi konteineriai:
 
+- `std::vector<Studentas>`
+- `std::list<Studentas>`
 
+Trys skaidymo strategijos:
 
-### Pavyzdinė išvestis
-=== Testas su failu: studentai_10000_K6.txt ===
-=== v0.3 (vector) ===
-Skaitymas: 45 ms
-Skaidymas: 20 ms
-Rikiavimas: 33 ms
-Rasymas: 28 ms
-Is viso: 126 ms
-Pirmo studento atminties adresas: 0x0000021e96bdfc10
+1. `partition_copy`
+2. `remove_if`
+3. `partition`
 
-=== v0.3 (list) ===
-Skaitymas: 67 ms
-Skaidymas: 26 ms
-Rikiavimas: 41 ms
-Rasymas: 33 ms
-Is viso: 167 ms
+Programa gali veikti:
+
+- **Interaktyviu režimu**
+- **Benchmark režimu** (automatiniai testai visiems failams)
+
 
 ### Sistemos informacija
 - Procesorius: 12th gen Intel i7-12650H
@@ -49,324 +30,678 @@ Is viso: 167 ms
 - Operacinė sistema:  Windows 11, 64-bit
 *Nuadojama Visual Studio 2022*
 
-###  Pagrindiniai vykdomieji failai
+# Kalbos standartas
+
+C++20 Standart
+
+## Įdiegimo instrukcija (naudojant CMake)
+
+Projektas sukurtas taip, kad veiktų bet kurioje operacinėje sistemoje naudojant *CMake* ir C++20 kompiliatorių.
+
+### Reikalavimai
+
+Prieš kompiliuodami įsitikinkite, kad turite:
+
+- CMake 3.10
+- C++20 suderinamą kompiliatorių:
+  - *g++* (Linux)
+  - *clang++* (MacOS)
+  - *MSVC* (Windows, Visual Studio Build Tools)
+
+Sukurkite build katalogą:
+
+mkdir build
+cd build
+
+Paleiskite Cmake projektui konfigutuoti:
+
+cmake ..
+
+Sukompiliuokite programą:
+
+cmake --build .
 
 
- **Pirmoji-uzduotis.cpp** | Pagrindinis programos įėjimo taškas (`main`). Leidžia vartotojui pasirinkti duomenų šaltinį (failą, generavimą ar rankinį įvedimą), rezultatų skaičiavimo metodą (vidurkis/mediana), rikiavimo kriterijų bei konteinerio tipą. |
- **bench_auto.cpp** | Automatinio testavimo modulis, kuris suranda visus `studentai_*.txt` failus kataloge ir paleidžia juos matuojant spartos rezultatus visoms strategijoms ir konteineriams. Naudojamas konteinerių (`vector`, `list`) palyginimui. |
- **bench_runner.cpp** | Rankinio testavimo versija (naudota vidinio tikrinimo metu). Leidžia paleisti vieną konkretų testą su pasirinktu failu. |
+
+# Naudojimas
+
+FAILŲ GENERAVIMAS:
+1. Paleisti programą.
+2. UI pasirinkti 'Įprastą režimą'
+3. Generuoti naujus failus.
+
+DARBAS SU FAILAIS:
+1. Paleisti programą.
+2. Pasirinkti režimą:
+   - **1** – normalus režimas
+   - **2** – benchmark režimas
+3. Benchmark režimas automatiškai ištestuos visus įmanomus scenarijus, o 'normalus režimas' -> 'esamo failo naudojimas' leis dirbti su failais po vieną. 
+
+
+
+# Benchmark režimas
+
+Benchmark režimas automatiškai suranda visus failus kataloge, prasidedančius `studentai_` ir testuoja:
+
+- **2 konteinerius** (`vector` ir `list`)
+- **3 strategijas**
+- **6 skirtingus failų dydžius**
+
+## Studentų skaidymo strategijos
+
+Programa realizuoja tris skirtingas studentų skaidymo strategijas:
+`partition_copy`, `remove_if` ir `partition`.
+
+Visos jos atskiria studentus į dvi grupes, tačiau veikia skirtingai tiek
+logiškai, tiek našumo ir atminties požiūriu.
 
 ---
 
-### Duomenų apdorojimo moduliai 
+### `partition_copy`
 
- **studentai.hpp** | Apibrėžia struktūrą `Studentas`, kuri saugo vardą, pavardę, pažymius ir egzamino rezultatą. Taip pat pateikia funkcijas duomenų palyginimui ir galutinio pažymio skaičiavimui. |
- **ivestis.hpp / ivestis.cpp** | Atsakingi už duomenų įvedimą – tiek iš vartotojo konsolės, tiek iš failų. Apdoroja eilutes ir konvertuoja jas į `Studentas` objektus. |
- **skaiciavimas.hpp / skaiciavimas.cpp** | Realizuoja pažymio skaičiavimo logiką. Naudojamos dvi pagrindinės funkcijos: pagal **vidurkį** ir pagal **medianą**. |
- **sort.hpp** | Rikiavimo funkcijos: rikiuoja studentus pagal vardą, pavardę arba galutinį pažymį naudojant `merge_sort` algoritmą. |
- **formatas.hpp / formatas.cpp** | Duomenų išvedimo formatavimas – atsakingi už rezultatų išrašymą į failus (`vargsiukai.txt`, `kietiakiai.txt`, `rezultatas.txt`) tinkama struktūra. |
- **generatorius.hpp / generatorius.cpp** | Atsitiktinių studentų duomenų generatorius. Naudoja `std::mt19937` generatorių, kad sukurtų testinius failus su tūkstančiais ar milijonais įrašų. |
+`partition_copy` nekeičia originalaus konteinerio.
 
-###  Algoritmų ir konteinerių valdymo dalys
+Ji pereina per visus elementus ir kiekvieną nukopijuoja į vieną iš dviejų
+naujų konteinerių — **vargšiukus** ir **kietiakius**.
 
- **streaming.hpp / streaming.cpp** | Optimizuotos funkcijos, leidžiančios skaityti ir rašyti didelius duomenų kiekius naudojant efektyvų srautų (`stream`) apdorojimą. |
- **konteineriu_pasirinkimas.hpp** | Apibrėžia šabloninį tipą `ContainerT<Tag, T>`, leidžiantį programai lengvai perjungti tarp `std::vector` ir `std::list` konteinerių be kodo dubliavimo. |
- **v03_api.hpp / v03_api.cpp** | Įgyvendina tris duomenų skirstymo strategijas (`partition_copy`, `remove_if`, `partition`) ir jas pritaiko skirtingiems konteineriams. Matavimai leidžia palyginti skirtingų strategijų spartą. |
- **v03_runner.hpp** | Pagrindinis vykdymo modulis, kuris apjungia skaitymą, skirstymą, rikiavimą ir rašymą į vieną procesą. Atlieka spartos matavimus bei atminties analizę. |
+Tai saugus metodas, nes originalūs duomenys lieka nepakitę, tačiau strategijai
+reikia papildomos atminties. Praktikoje ji labai greita su `std::vector`,
+nes rašo nuosekliai į du ištisinius masyvus.
 
 
+### `remove_if`
 
-### Pagalbiniai ir išvesties failai
+`remove_if` modifikuoja originalų konteinerį.
 
- **studentai_1000_K6.txt**, **studentai_10000_K6.txt**, ... | Sugeneruoti testavimo duomenų failai su skirtingais įrašų kiekiais (1 000 – 10 000 000). |
- **vargsiukai.txt / kietiakiai.txt / rezultatas.txt** | Programos sugeneruoti rezultatai – suskirstyti studentai pagal galutinį pažymį (žemiau arba aukščiau 5). |
- **studentai_gen.txt / studentai_v1.txt / studentai_v1_test.txt** | Vidiniai testiniai duomenų failai, naudoti kūrimo ir derinimo metu. |
+Ji pašalina visus elementus, kurie neturi likti, ir palieka tik vieną
+grupę. Šis metodas iš esmės nėra tikras skaidymas į dvi dalis — jis
+tiesiog “išmeta” vieną iš kategorijų.
+
+Strategija taupi atminčiai, bet nepraktiška, kai reikia **abiejų**
+grupių. Dideliuose failuose dažnai veikia lėčiau nei kiti metodai.
 
 
-### Rašomas bendras kompiliavimo laikas su automatiniu benchmark testu
-| Įrašų kiekis | Vector bendras (ms) | List bendras (ms) |
-|---------------|----------------------|--------------------|
-| 1 000         | 63                   | 63                 |
-| 10 000        | 672                  | 563                |
-| 100 000       | 7781                 | 5692               |
-| 1mil          | 127621               | 56693              |
-| 10mil         | 199975               | 134431             |               
-|
+### `partition`
 
-> Visi bėgimai buvo atlikti tame pačiame kompiuteryje, su vienoda apkrova, kai stulpelių kiekis – 6.
+`partition` taip pat keičia originalų konteinerį, tačiau nieko
+neištrina — tik pertvarko elementus.
 
- Toliau pateikiami konkretūs rezultatai
+Po operacijos konteineryje pirmoje pusėje atsiduria visi elementai,
+tenkinantys predikatą, antroje — visi kiti. Ribos iteratorius leidžia
+šį vieną konteinerį logiškai padalinti į dvi dalis.
 
- 1000 eilučių:
+Šiai strategijai beveik nereikia papildomos atminties. Su `std::list`
+ji ypač greita, nes perrišamos tik mazgų rodyklės, o ne kopijuojami
+duomenys.
 
-Testuojamas failas: .\studentai_1000_K6.txt 
+
+
+Visuose testuose fiksuojamas tik **bendras programos veikimo laikas (ms)**.
+
+Testuoti failai:
+
+- `studentai_10000000_K6.txt`
+- `studentai_1000000_K6.txt`
+- `studentai_100000_K6.txt`
+- `studentai_10000_K6.txt`
+- `studentai_1000_K6.txt`
+- `studentai_1000_K7.txt`
+
+---
+
+# BENDRI LAIKAI – `std::vector`
+
+## **Strategija 1 – `partition_copy`**
+
+| Failas | Įrašų kiekis | Laikas (ms) |
+|--------|--------------|-------------|
+| studentai_10000000_K6.txt | 10 000 000 | 46606 | = ~46 sekundėx
+| studentai_1000000_K6.txt  | 1 000 000  | 4465 |
+| studentai_100000_K6.txt   | 100 000    | 552 |
+| studentai_10000_K6.txt    | 10 000     | 67 |
+| studentai_1000_K6.txt     | 1 000      | 25 |
+| studentai_1000_K7.txt     | 1 000      | 20 |
+
+---
+
+## **Strategija 2 – `remove_if`**
+
+| Failas | Įrašų kiekis | Laikas (ms) |
+|--------|--------------|-------------|
+| studentai_10000000_K6.txt | 10 000 000 | 53738 |~ 53 sekundės
+| studentai_1000000_K6.txt  | 1 000 000  | 5340 |
+| studentai_100000_K6.txt   | 100 000    | 781 |
+| studentai_10000_K6.txt    | 10 000     | 53 |
+| studentai_1000_K6.txt     | 1 000      | 10 |
+| studentai_1000_K7.txt     | 1 000      | 11 |
+
+---
+
+## **Strategija 3 – `partition`**
+
+| Failas | Įrašų kiekis | Laikas (ms) |
+|--------|--------------|-------------|
+| studentai_10000000_K6.txt | 10 000 000 | 51970 | ~ 51 sekundė
+| studentai_1000000_K6.txt  | 1 000 000  | 5540 |
+| studentai_100000_K6.txt   | 100 000    | 574 |
+| studentai_10000_K6.txt    | 10 000     | 44 |
+| studentai_1000_K6.txt     | 1 000      | 18 |
+| studentai_1000_K7.txt     | 1 000      | 17 |
+
+---
+
+# BENDRI LAIKAI – `std::list`
+
+## **Strategija 1 – `partition_copy`**
+
+| Failas | Įrašų kiekis | Laikas (ms) |
+|--------|--------------|-------------|
+| studentai_10000000_K6.txt | 10 000 000 | 50180 | ~ 50 sekundžių
+| studentai_1000000_K6.txt  | 1 000 000  | 5503 |
+| studentai_100000_K6.txt   | 100 000    | 501 |
+| studentai_10000_K6.txt    | 10 000     | 51 |
+| studentai_1000_K6.txt     | 1 000      | 16 |
+| studentai_1000_K7.txt     | 1 000      | 16 |
+
+---
+
+## **Strategija 2 – `remove_if`**
+
+| Failas | Įrašų kiekis | Laikas (ms) |
+|--------|--------------|-------------|
+| studentai_10000000_K6.txt | 10 000 000 | 53145 | ~ 53 sekundės
+| studentai_1000000_K6.txt  | 1 000 000  | 5289 |
+| studentai_100000_K6.txt   | 100 000    | 518 |
+| studentai_10000_K6.txt    | 10 000     | 59 |
+| studentai_1000_K6.txt     | 1 000      | 10 |
+| studentai_1000_K7.txt     | 1 000      | 10 |
+
+---
+
+## **Strategija 3 – `partition`**
+
+| Failas | Įrašų kiekis | Laikas (ms) |
+|--------|--------------|-------------|
+| studentai_10000000_K6.txt | 10 000 000 | 49747 | ~ 49 skeundės
+| studentai_1000000_K6.txt  | 1 000 000  | 4892 |
+| studentai_100000_K6.txt   | 100 000    | 521 |
+| studentai_10000_K6.txt    | 10 000     | 51 |
+| studentai_1000_K6.txt     | 1 000      | 19 |
+| studentai_1000_K7.txt     | 1 000      | 14 |
+
+---
+
+# Išvados
+
+### 1. Greičiausias bendras variantas (didžiausi failai)
+
+| Konteineris | Strategija | Laikas |
+|-------------|------------|--------|
+| `std::vector` | **partition_copy** | **46606 ms** |
+| `std::list`   | **partition** | **49747 ms** |
+
+### 2. `std::vector` yra greitesnis už `std::list` dideliems failams
+Dėl nuoseklios atminties (`cache locality`) ir spartesnio rikiavimo.
+
+### 3. Mažiems failams strategijos nesiskiria
+Kai įrašų < 10 000 — visi variantai veikia labai greitai (10–70 ms).
+
+
+
+
+### VISI KONSOLES REZULTATAI PASIRINKUS BENCHMARK
+
+Rasti failai:
+
+- .\studentai_10000000_K6.txt
+- .\studentai_1000000_K6.txt
+- .\studentai_100000_K6.txt
+- .\studentai_10000_K6.txt
+- .\studentai_1000_K6.txt
+- .\studentai_1000_K7.txt
+
+========================================
+Failas: .\studentai_10000000_K6.txt
+
+---
+
+Konteineris: std::vector
+
+## [Strategija 1 (partition_copy)]
 Rezultatai issaugoti faile: vargsiukai.txt
 Rezultatai issaugoti faile: kietiakiai.txt
-Rezultatai issaugoti: vargsiukai.txt (403), kietiakiai.txt (597)
-v0.3 (vector) ===
-Skaitymas: 33 ms
-Skaidymas: 2 ms
-Rikiavimas: 13 ms
+=== v0.3 (vector) ===
+Skaitymas: 27951 ms
+Skaidymas: 827 ms
+Rikiavimas: 7295 ms
+Rasymas: 10533 ms
+Is viso: 46606 ms
+Pirmo studento atminties adresas: 0000021F6FB35060
+
+## [Strategija 2 (remove_if)]
+Rezultatai issaugoti faile: vargsiukai.txt
+Rezultatai issaugoti faile: kietiakiai.txt
+=== v0.3 (vector) ===
+Skaitymas: 34176 ms
+Skaidymas: 743 ms
+Rikiavimas: 7996 ms
+Rasymas: 10823 ms
+Is viso: 53738 ms
+
+## [Strategija 3 (partition)]
+Rezultatai issaugoti faile: vargsiukai.txt
+Rezultatai issaugoti faile: kietiakiai.txt
+=== v0.3 (vector) ===
+Skaitymas: 33068 ms
+Skaidymas: 727 ms
+Rikiavimas: 7522 ms
+Rasymas: 10653 ms
+Is viso: 51970 ms
+
+---
+
+Konteineris: std::list
+
+## [Strategija 1 (partition_copy)]
+Rezultatai issaugoti faile: vargsiukai.txt
+Rezultatai issaugoti faile: kietiakiai.txt
+=== v0.3 (list) ===
+Skaitymas: 34079 ms
+Skaidymas: 1507 ms
+Rikiavimas: 3200 ms
+Rasymas: 11394 ms
+Is viso: 50180 ms
+Pirmo studento atminties adresas: 0000021F1E4536D0
+
+## [Strategija 2 (remove_if)]
+Rezultatai issaugoti faile: vargsiukai.txt
+Rezultatai issaugoti faile: kietiakiai.txt
+=== v0.3 (list) ===
+Skaitymas: 36262 ms
+Skaidymas: 1781 ms
+Rikiavimas: 2950 ms
+Rasymas: 12152 ms
+Is viso: 53145 ms
+Pirmo studento atminties adresas: 0000021F252FDB70
+
+## [Strategija 3 (partition)]
+Rezultatai issaugoti faile: vargsiukai.txt
+Rezultatai issaugoti faile: kietiakiai.txt
+=== v0.3 (list) ===
+Skaitymas: 34618 ms
+Skaidymas: 154 ms
+Rikiavimas: 3189 ms
+Rasymas: 11786 ms
+Is viso: 49747 ms
+
+========================================
+Failas: .\studentai_1000000_K6.txt
+
+---
+
+Konteineris: std::vector
+
+## [Strategija 1 (partition_copy)]
+Rezultatai issaugoti faile: vargsiukai.txt
+Rezultatai issaugoti faile: kietiakiai.txt
+=== v0.3 (vector) ===
+Skaitymas: 2759 ms
+Skaidymas: 63 ms
+Rikiavimas: 506 ms
+Rasymas: 1137 ms
+Is viso: 4465 ms
+Pirmo studento atminties adresas: 0000021F7BBA5060
+
+## [Strategija 2 (remove_if)]
+Rezultatai issaugoti faile: vargsiukai.txt
+Rezultatai issaugoti faile: kietiakiai.txt
+=== v0.3 (vector) ===
+Skaitymas: 3356 ms
+Skaidymas: 66 ms
+Rikiavimas: 634 ms
+Rasymas: 1284 ms
+Is viso: 5340 ms
+
+## [Strategija 3 (partition)]
+Rezultatai issaugoti faile: vargsiukai.txt
+Rezultatai issaugoti faile: kietiakiai.txt
+=== v0.3 (vector) ===
+Skaitymas: 3525 ms
+Skaidymas: 65 ms
+Rikiavimas: 668 ms
+Rasymas: 1282 ms
+Is viso: 5540 ms
+
+---
+
+Konteineris: std::list
+
+## [Strategija 1 (partition_copy)]
+Rezultatai issaugoti faile: vargsiukai.txt
+Rezultatai issaugoti faile: kietiakiai.txt
+=== v0.3 (list) ===
+Skaitymas: 3738 ms
+Skaidymas: 140 ms
+Rikiavimas: 234 ms
+Rasymas: 1391 ms
+Is viso: 5503 ms
+Pirmo studento atminties adresas: 0000021F28626600
+
+## [Strategija 2 (remove_if)]
+Rezultatai issaugoti faile: vargsiukai.txt
+Rezultatai issaugoti faile: kietiakiai.txt
+=== v0.3 (list) ===
+Skaitymas: 3636 ms
+Skaidymas: 158 ms
+Rikiavimas: 228 ms
+Rasymas: 1267 ms
+Is viso: 5289 ms
+Pirmo studento atminties adresas: 0000021F6CDAB1F0
+
+## [Strategija 3 (partition)]
+Rezultatai issaugoti faile: vargsiukai.txt
+Rezultatai issaugoti faile: kietiakiai.txt
+=== v0.3 (list) ===
+Skaitymas: 3411 ms
+Skaidymas: 14 ms
+Rikiavimas: 253 ms
+Rasymas: 1214 ms
+Is viso: 4892 ms
+
+========================================
+Failas: .\studentai_100000_K6.txt
+
+---
+
+Konteineris: std::vector
+
+## [Strategija 1 (partition_copy)]
+Rezultatai issaugoti faile: vargsiukai.txt
+Rezultatai issaugoti faile: kietiakiai.txt
+=== v0.3 (vector) ===
+Skaitymas: 346 ms
+Skaidymas: 7 ms
+Rikiavimas: 65 ms
+Rasymas: 134 ms
+Is viso: 552 ms
+Pirmo studento atminties adresas: 0000021F75F91060
+
+## [Strategija 2 (remove_if)]
+Rezultatai issaugoti faile: vargsiukai.txt
+Rezultatai issaugoti faile: kietiakiai.txt
+=== v0.3 (vector) ===
+Skaitymas: 545 ms
+Skaidymas: 9 ms
+Rikiavimas: 81 ms
+Rasymas: 146 ms
+Is viso: 781 ms
+
+## [Strategija 3 (partition)]
+Rezultatai issaugoti faile: vargsiukai.txt
+Rezultatai issaugoti faile: kietiakiai.txt
+=== v0.3 (vector) ===
+Skaitymas: 388 ms
+Skaidymas: 6 ms
+Rikiavimas: 51 ms
+Rasymas: 129 ms
+Is viso: 574 ms
+
+---
+
+Konteineris: std::list
+
+## [Strategija 1 (partition_copy)]
+Rezultatai issaugoti faile: vargsiukai.txt
+Rezultatai issaugoti faile: kietiakiai.txt
+=== v0.3 (list) ===
+Skaitymas: 351 ms
+Skaidymas: 21 ms
+Rikiavimas: 19 ms
+Rasymas: 110 ms
+Is viso: 501 ms
+Pirmo studento atminties adresas: 0000021F9ABDC7F0
+
+## [Strategija 2 (remove_if)]
+Rezultatai issaugoti faile: vargsiukai.txt
+Rezultatai issaugoti faile: kietiakiai.txt
+=== v0.3 (list) ===
+Skaitymas: 349 ms
+Skaidymas: 10 ms
+Rikiavimas: 14 ms
+Rasymas: 145 ms
+Is viso: 518 ms
+Pirmo studento atminties adresas: 0000021F9ABDCB70
+
+## [Strategija 3 (partition)]
+Rezultatai issaugoti faile: vargsiukai.txt
+Rezultatai issaugoti faile: kietiakiai.txt
+=== v0.3 (list) ===
+Skaitymas: 370 ms
+Skaidymas: 1 ms
+Rikiavimas: 12 ms
+Rasymas: 138 ms
+Is viso: 521 ms
+
+========================================
+Failas: .\studentai_10000_K6.txt
+
+---
+
+Konteineris: std::vector
+
+## [Strategija 1 (partition_copy)]
+Rezultatai issaugoti faile: vargsiukai.txt
+Rezultatai issaugoti faile: kietiakiai.txt
+=== v0.3 (vector) ===
+Skaitymas: 42 ms
+Skaidymas: 0 ms
+Rikiavimas: 2 ms
+Rasymas: 23 ms
+Is viso: 67 ms
+Pirmo studento atminties adresas: 0000021F87CAF020
+
+## [Strategija 2 (remove_if)]
+Rezultatai issaugoti faile: vargsiukai.txt
+Rezultatai issaugoti faile: kietiakiai.txt
+=== v0.3 (vector) ===
+Skaitymas: 31 ms
+Skaidymas: 0 ms
+Rikiavimas: 2 ms
+Rasymas: 20 ms
+Is viso: 53 ms
+
+## [Strategija 3 (partition)]
+Rezultatai issaugoti faile: vargsiukai.txt
+Rezultatai issaugoti faile: kietiakiai.txt
+=== v0.3 (vector) ===
+Skaitymas: 27 ms
+Skaidymas: 0 ms
+Rikiavimas: 2 ms
 Rasymas: 15 ms
-Is viso: 63 ms
-Pirmo studento atminties adresas: 0000016188E54080
----------------------------------------
+Is viso: 44 ms
+
+---
+
+Konteineris: std::list
+
+## [Strategija 1 (partition_copy)]
 Rezultatai issaugoti faile: vargsiukai.txt
 Rezultatai issaugoti faile: kietiakiai.txt
-Rezultatai issaugoti: vargsiukai.txt (403), kietiakiai.txt (597)
-v0.3 (list) ===
-Skaitymas: 43 ms
-Skaidymas: 2 ms
+=== v0.3 (list) ===
+Skaitymas: 33 ms
+Skaidymas: 0 ms
 Rikiavimas: 0 ms
 Rasymas: 18 ms
-Is viso: 63 ms
-Pirmo studento atminties adresas: 00000161DEC024B0
----------------------------------------
+Is viso: 51 ms
+Pirmo studento atminties adresas: 0000021F8BC6B1F0
 
-10000 eilučių:
-
-=== Testuojamas failas: .\studentai_10000_K6.txt ===
+## [Strategija 2 (remove_if)]
 Rezultatai issaugoti faile: vargsiukai.txt
 Rezultatai issaugoti faile: kietiakiai.txt
-Rezultatai issaugoti: vargsiukai.txt (4050), kietiakiai.txt (5950)
-v0.3 (vector) ===
-Skaitymas: 315 ms
-Skaidymas: 21 ms
-Rikiavimas: 212 ms
-Rasymas: 124 ms
-Is viso: 672 ms
-Pirmo studento atminties adresas: 0000016188E5B080
----------------------------------------
+=== v0.3 (list) ===
+Skaitymas: 41 ms
+Skaidymas: 1 ms
+Rikiavimas: 0 ms
+Rasymas: 17 ms
+Is viso: 59 ms
+Pirmo studento atminties adresas: 0000021F8BC6BDF0
+
+## [Strategija 3 (partition)]
 Rezultatai issaugoti faile: vargsiukai.txt
 Rezultatai issaugoti faile: kietiakiai.txt
-Rezultatai issaugoti: vargsiukai.txt (4050), kietiakiai.txt (5950)
-v0.3 (list) ===
-Skaitymas: 392 ms
-Skaidymas: 22 ms
-Rikiavimas: 10 ms
-Rasymas: 139 ms
-Is viso: 563 ms
-Pirmo studento atminties adresas: 00000161D982EC00
----------------------------------------
+=== v0.3 (list) ===
+Skaitymas: 34 ms
+Skaidymas: 0 ms
+Rikiavimas: 1 ms
+Rasymas: 16 ms
+Is viso: 51 ms
 
-100000 eilučių
-
-=== Testuojamas failas: .\studentai_100000_K6.txt ===
-Rezultatai issaugoti faile: vargsiukai.txt
-Rezultatai issaugoti faile: kietiakiai.txt
-Rezultatai issaugoti: vargsiukai.txt (41364), kietiakiai.txt (58636)
-v0.3 (vector) ===
-Skaitymas: 3750 ms
-Skaidymas: 199 ms
-Rikiavimas: 2675 ms
-Rasymas: 1157 ms
-Is viso: 7781 ms
-Pirmo studento atminties adresas: 00000161E0716080
----------------------------------------
-Rezultatai issaugoti faile: vargsiukai.txt
-Rezultatai issaugoti faile: kietiakiai.txt
-Rezultatai issaugoti: vargsiukai.txt (41364), kietiakiai.txt (58636)
-v0.3 (list) ===
-Skaitymas: 4011 ms
-Skaidymas: 230 ms
-Rikiavimas: 133 ms
-Rasymas: 1318 ms
-Is viso: 5692 ms
-Pirmo studento atminties adresas: 00000161DD989E70
----------------------------------------
-
-1mil eilučių:
-
-=== Testuojamas failas: .\studentai_1000000_K6.txt ===
-Rezultatai issaugoti faile: vargsiukai.txt
-Rezultatai issaugoti faile: kietiakiai.txt
-Rezultatai issaugoti: vargsiukai.txt (410504), kietiakiai.txt (589496)
-v0.3 (vector) ===
-Skaitymas: 44709 ms
-Skaidymas: 2672 ms
-Rikiavimas: 66212 ms
-Rasymas: 14028 ms
-Is viso: 127621 ms
-Pirmo studento atminties adresas: 000001623821B080
----------------------------------------
-Rezultatai issaugoti faile: vargsiukai.txt
-Rezultatai issaugoti faile: kietiakiai.txt
-Rezultatai issaugoti: vargsiukai.txt (410504), kietiakiai.txt (589496)
-v0.3 (list) ===
-Skaitymas: 39450 ms
-Skaidymas: 2324 ms
-Rikiavimas: 1672 ms
-Rasymas: 13193 ms
-Is viso: 56639 ms
-Pirmo studento atminties adresas: 00000161F87524B0
----------------------------------------
-
-10mil eilučių:
-
-=== Testuojamas failas: .\studentai_10000000_K6.txt ===
-Rezultatai issaugoti faile: vargsiukai.txt
-Rezultatai issaugoti faile: kietiakiai.txt
-Rezultatai issaugoti: vargsiukai.txt (916677), kietiakiai.txt (1314309)
-v0.3 (vector) ===
-Skaitymas: 81654 ms
-Skaidymas: 4306 ms
-Rikiavimas: 83059 ms
-Rasymas: 30956 ms
-Is viso: 199 975 ms
-Pirmo studento atminties adresas: 00000161A8FFB080
----------------------------------------
-Rezultatai issaugoti faile: vargsiukai.txt
-Rezultatai issaugoti faile: kietiakiai.txt
-Rezultatai issaugoti: vargsiukai.txt (916677), kietiakiai.txt (1314309)
-v0.3 (list) ===
-Skaitymas: 109163 ms
-Skaidymas: 3319 ms
-Rikiavimas: 2555 ms
-Rasymas: 19394 ms
-Is viso: 134431 ms
-Pirmo studento atminties adresas: 00000161D6E6A180
----------------------------------------
-
-## Skaidymo strategijos (v1.0)
-
-### Strategija 1 - `partition_copy`
-Naudojami du nauji konteineriai: vienas vargšiukams, kitas kietiakiams.  
-Naudojamas algoritmas `std::partition_copy`, kuris per vieną perėjimą per duomenis sukuria abi grupes.  
-*Privalumai: greitas skaidymas, paprastas realizavimas.  
-*Trūkumai: dvigubas atminties naudojimas.
-
-### Strategija 2 – `remove_if` + `copy_if`
-Vargšiukai nukopijuojami į naują konteinerį, o iš pradinio pašalinami naudojant `std::remove_if`.  
-*Privalumai: mažesnis atminties poreikis, paprasta kontrolė.  
-*Trūkumai: dvigubas perėjimas per duomenis, lėtesnis dideliems failams.
-
-### Strategija 3 - `partition` (in-place)
-Skirstymas vykdomas vietoje, viename konteineryje naudojant `std::partition`.  
-*Privalumai: mažiausias atminties naudojimas, labai greitas.  
-*Trūkumai: gali pakeisti studentų eiliškumą.
+========================================
+Failas: .\studentai_1000_K6.txt
 
 ---
 
-## Testavimo rezultatai ir analizė
+Konteineris: std::vector
 
-### Rezultatai naudojant `std::vector`
+## [Strategija 1 (partition_copy)]
+Rezultatai issaugoti faile: vargsiukai.txt
+Rezultatai issaugoti faile: kietiakiai.txt
+=== v0.3 (vector) ===
+Skaitymas: 21 ms
+Skaidymas: 0 ms
+Rikiavimas: 0 ms
+Rasymas: 4 ms
+Is viso: 25 ms
+Pirmo studento atminties adresas: 0000021F87CAF020
 
-| Įrašų kiekis | Strategija 1 (`partition_copy`) | Strategija 2 (`remove_if`) | Strategija 3 (`partition`) |
-|---------------|---------------------------------|-----------------------------|-----------------------------|
-| 1 000         | 70 ms                           |                       71 ms | 78 ms                       |
-| 10 000        | 729 ms                          | 690 ms                      | 739 ms                      
-| 100 000       | 8 262 ms                        | 7 869 ms                    | 9 321 ms                    |
-| 1 000 000     | 86 714 ms                       | 88 835 ms                   | 95 620 ms                   |
-| 10 000 000    | - 
+## [Strategija 2 (remove_if)]
+Rezultatai issaugoti faile: vargsiukai.txt
+Rezultatai issaugoti faile: kietiakiai.txt
+=== v0.3 (vector) ===
+Skaitymas: 2 ms
+Skaidymas: 0 ms
+Rikiavimas: 0 ms
+Rasymas: 8 ms
+Is viso: 10 ms
 
-
-### Rezultatai naudojant `std::list`
-
-| Įrašų kiekis | Strategija 1 (`partition_copy`) | Strategija 2 (`remove_if`) | Strategija 3 (`partition`) |
-|---------------|---------------------------------|-----------------------------|-----------------------------|
-| 1 000         | 64 ms                           | 68 ms                       | 73 ms
-| 10 000        | 579 ms                          | 600 ms |                    | 631 ms 
-| 100 000       | 6 243 ms                        | 6 261 ms                    | 6 336 ms
-| 1 000 000     | 61 407 ms                       | 61 038 ms                   | 61 994 ms 
-| 10 000 000    | 717 148ms                       | 715 006                     | 717 150 ms 
+## [Strategija 3 (partition)]
+Rezultatai issaugoti faile: vargsiukai.txt
+Rezultatai issaugoti faile: kietiakiai.txt
+=== v0.3 (vector) ===
+Skaitymas: 3 ms
+Skaidymas: 0 ms
+Rikiavimas: 0 ms
+Rasymas: 15 ms
+Is viso: 18 ms
 
 ---
 
-### Analizė
+Konteineris: std::list
 
-- **Greitis:**  
-  - Mažesniems duomenų kiekiams (`≤100k`) `std::vector` veikė greičiau nei `std::list`.  
-  - Su labai dideliais failais (`1 mln.` įrašų) `std::list` veikė stabiliau ir su mažesniais laiko svyravimais.  
-
-- **Strategijų palyginimas:**  
-  - 1 ir 2 strategijos (`partition_copy`, `remove_if`) buvo artimos pagal laiką.  
-  - 3 strategija (`partition`) buvo kiek lėtesnė `vector` atveju, bet našesnė `list` kontekste.  
-
-- **Atminties sąnaudos:**  
-  - `partition_copy` naudoja papildomą atmintį dėl naujų konteinerių kūrimo.  
-  - `remove_if` ir `partition` dirba efektyviau su atmintimi.  
-
-
-
-### Išvados
-
-Bendra išvada:
-Efektyviausias derinys dideliems duomenų kiekiams yra `std::list` su 3 strategija (`partition`),  
-o mažesniems – `std::vector` su 2 strategija (`remove_if`).
-
-Pasirinkite duomenu saltini (1 - txt failas, 2 - atsitiktinai generuoti duomenys, 3 - rankinis ivedimas):
-__________________________________________________________
-1
-Rasti .txt failai:
-1 - kietiakiai.txt
-2 - studentai_10000000_K6.txt
-3 - studentai_1000000_K6.txt
-4 - studentai_100000_K6.txt
-5 - studentai_10000_K6.txt
-6 - studentai_1000_K6.txt
-7 - studentai_1000_K7.txt
-8 - vargsiukai.txt
-Pasirinkite faila pagal numeri: 2
->> Pasirinktas failas: studentai_10000000_K6.txt
-Pasirinkite skaiciavimo buda (1 - vidurkis, 2 - mediana, 3 - vidurkis ir mediana):
-__________________________________________________________
-1
-Pasirinkite rikiavimo parametra (1 - studento vardas, 2 - studento pavarde)
-__________________________________________________________
-1
-Pasirinkite konteineri (1 - std::vector, 2 - std::list):
-__________________________________________________________
-2
-Pasirinkite versija (1 - v0.2 streaming, 2 - v0.3 konteineriai):
-__________________________________________________________
-2
-Ar norite paleisti visus 3 strategiju testus automatiskai? (1 - taip, 0 - ne): 1
-
-Automatinis strategiju palyginimo rezimas (v0.3):
-
-Strategija 1:
-Pasirinkite skaidymo strategija (1 - partition_copy, 2 - remove_if, 3 - partition): 3
-Naudoti stable partition (1 - taip, 0 - ne): 1
+## [Strategija 1 (partition_copy)]
 Rezultatai issaugoti faile: vargsiukai.txt
 Rezultatai issaugoti faile: kietiakiai.txt
-Saved: vargsiukai.txt (4112096), kietiakiai.txt (5887904)
 === v0.3 (list) ===
-Skaitymas: 283645 ms
-Skaidymas: 86534 ms
-Rikiavimas: 33255 ms
-Rasymas: 313714 ms
-Is viso: 717148 ms
-Pirmo studento atminties adresas: 000001A27604C180
----------------------------------------
+Skaitymas: 4 ms
+Skaidymas: 0 ms
+Rikiavimas: 0 ms
+Rasymas: 12 ms
+Is viso: 16 ms
+Pirmo studento atminties adresas: 0000021F9ABDC770
 
-Strategija 2:
-Pasirinkite skaidymo strategija (1 - partition_copy, 2 - remove_if, 3 - partition):
-3
-Naudoti stable partition (1 - taip, 0 - ne): 1
+## [Strategija 2 (remove_if)]
 Rezultatai issaugoti faile: vargsiukai.txt
 Rezultatai issaugoti faile: kietiakiai.txt
-Saved: vargsiukai.txt (4112096), kietiakiai.txt (5887904)
 === v0.3 (list) ===
-Skaitymas: 1288296 ms
-Skaidymas: 77225 ms
-Rikiavimas: 20082 ms
-Rasymas: 189260 ms
-Is viso: 1574863 ms
-Pirmo studento atminties adresas: 000001A276060FE0
----------------------------------------
+Skaitymas: 4 ms
+Skaidymas: 0 ms
+Rikiavimas: 0 ms
+Rasymas: 6 ms
+Is viso: 10 ms
+Pirmo studento atminties adresas: 0000021F9ABDCDF0
 
-Strategija 3:
-Pasirinkite skaidymo strategija (1 - partition_copy, 2 - remove_if, 3 - partition): 3
-Naudoti stable partition (1 - taip, 0 - ne):
-1
+## [Strategija 3 (partition)]
 Rezultatai issaugoti faile: vargsiukai.txt
 Rezultatai issaugoti faile: kietiakiai.txt
-Saved: vargsiukai.txt (4112096), kietiakiai.txt (5887904)
 === v0.3 (list) ===
-Skaitymas: 2186537 ms
-Skaidymas: 310560 ms
-Rikiavimas: 20597 ms
-Rasymas: 162619 ms
-Is viso: 2680313 ms
-Pirmo studento atminties adresas: 000001A276060E40
----------------------------------------
+Skaitymas: 2 ms
+Skaidymas: 0 ms
+Rikiavimas: 0 ms
+Rasymas: 17 ms
+Is viso: 19 ms
+
+========================================
+Failas: .\studentai_1000_K7.txt
+
+---
+
+Konteineris: std::vector
+
+## [Strategija 1 (partition_copy)]
+Rezultatai issaugoti faile: vargsiukai.txt
+Rezultatai issaugoti faile: kietiakiai.txt
+=== v0.3 (vector) ===
+Skaitymas: 16 ms
+Skaidymas: 0 ms
+Rikiavimas: 0 ms
+Rasymas: 4 ms
+Is viso: 20 ms
+Pirmo studento atminties adresas: 0000021F87CAF020
+
+## [Strategija 2 (remove_if)]
+Rezultatai issaugoti faile: vargsiukai.txt
+Rezultatai issaugoti faile: kietiakiai.txt
+=== v0.3 (vector) ===
+Skaitymas: 3 ms
+Skaidymas: 0 ms
+Rikiavimas: 0 ms
+Rasymas: 8 ms
+Is viso: 11 ms
+
+## [Strategija 3 (partition)]
+Rezultatai issaugoti faile: vargsiukai.txt
+Rezultatai issaugoti faile: kietiakiai.txt
+=== v0.3 (vector) ===
+Skaitymas: 3 ms
+Skaidymas: 0 ms
+Rikiavimas: 0 ms
+Rasymas: 14 ms
+Is viso: 17 ms
+
+---
+
+Konteineris: std::list
+
+## [Strategija 1 (partition_copy)]
+Rezultatai issaugoti faile: vargsiukai.txt
+Rezultatai issaugoti faile: kietiakiai.txt
+=== v0.3 (list) ===
+Skaitymas: 3 ms
+Skaidymas: 0 ms
+Rikiavimas: 0 ms
+Rasymas: 13 ms
+Is viso: 16 ms
+Pirmo studento atminties adresas: 0000021F9ABDC370
+
+## [Strategija 2 (remove_if)]
+Rezultatai issaugoti faile: vargsiukai.txt
+Rezultatai issaugoti faile: kietiakiai.txt
+=== v0.3 (list) ===
+Skaitymas: 3 ms
+Skaidymas: 0 ms
+Rikiavimas: 0 ms
+Rasymas: 7 ms
+Is viso: 10 ms
+Pirmo studento atminties adresas: 0000021F9ABDCDF0
+
+## [Strategija 3 (partition)]
+Rezultatai issaugoti faile: vargsiukai.txt
+Rezultatai issaugoti faile: kietiakiai.txt
+=== v0.3 (list) ===
+Skaitymas: 3 ms
+Skaidymas: 0 ms
+Rikiavimas: 0 ms
+Rasymas: 11 ms
+Is viso: 14 ms
+
+Visi benchmark testai baigti.

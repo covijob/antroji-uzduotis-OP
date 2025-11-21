@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="bench_runner.cpp" />
     <ClCompile Include="formatas.cpp" />
     <ClCompile Include="generatorius.cpp" />
     <ClCompile Include="ivestis.cpp" />
@@ -142,6 +143,7 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="bench_runner.hpp" />
     <ClInclude Include="formatas.hpp" />
     <ClInclude Include="generatorius.hpp" />
     <ClInclude Include="ivestis.hpp" />

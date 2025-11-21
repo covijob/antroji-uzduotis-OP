@@ -4,9 +4,11 @@
 #include <filesystem>
 #include <random>
 
+
 #include "v03_runner.hpp"
 #include "konteineriu_pasirinkimas.hpp"
 #include "generatorius.hpp"
+#include "bench_runner.hpp"
 
 std::size_t nustatyti_eiluciu_kieki(const std::string& failas) {
     std::string pref = "studentai_";
@@ -25,8 +27,24 @@ std::size_t nustatyti_eiluciu_kieki(const std::string& failas) {
 }
 
 int main() {
+
+    std::ios::sync_with_stdio(false);
+
+    std::cout << "Pasirinkite rezima:\n";
+    std::cout << "1 - Iprastas naudojimas (failu generavimas/greitas testavimas)\n";
+    std::cout << "2 - Benchmark (visi failai, konteineriai ir strategijos)\n";
+    int rezimas;
+    std::cin >> rezimas;
+
+    if (rezimas == 2) {
+        run_benchmarks();
+        return 0;
+    }
+
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
+
+
 
     int veiksmas = 0;
     std::cout << "Pasirinkite veiksma:\n";
