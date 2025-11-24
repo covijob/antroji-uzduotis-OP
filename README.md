@@ -1,18 +1,148 @@
-﻿
-# v1.1
+﻿### STRUCT
 
-Šioje versijoje kodas perorganizuojamas pagal OOP principus ir vykdomas spartos analizės palyginimas su 1.0 versija.
+# std::vector — Strategijų palyginimas
 
-### Naudojimas
->Pirmoji-uzduotis.cpp turi būti nustatyti visi reikalingi studentų failų formatavimo dydžiai(eilučių kiekis).
->Norint sugeneruoti reikalingus .txt failus nustatome *bench_runner.cpp* NEĮTRAUKTI į projektą,
-o *Pirmoji-uzduotis.cpp* privalo būti ĮTRAUKTA.
-> Paleidus programą galime pasirinkti ar norime naudoti jau sukurtą failą, generuoti naujus arba ranką įrašyti duomenis
-> Tada atliekama analizė pagal tolimiau pasirinktus parametrus
-BENCH MARK TESTAS
-> Norint plaiesti bench mark testą su atsitiktinai sugeneruotais duomenimis *bench_runner.cpp* ĮTRAUKIAME į projektą,
-o *Pirmoji-uzduotis.cpp* nustatome NEĮTRAUKTI.
-> Tada galime paleisti programą ir su sugeneruotais failais bus vykdomas bench mark testas, kuris nustatys veiksmų su failais laikus.
-BENCH v1.0
->Siekiant atlikti testą (v1.0) darome tą patį tik su *bench_auto.cpp*
+| Failas | Strat 1 (ms) | Strat 2 (ms) | Strat 3 (ms) |
+|--------|--------------|--------------|--------------|
+| 10 000 000 |   46 606 |       53 738 | 51 970 |
+| 1 000 000  |    4 465 |        5 340 |  5 540 |
+| 100 000    |      552 |          781 |    574 |
+| 10 000     |       67 |           53 |     44 |
+| 1 000 K6   |       25 |           10 |     18 |
+| 1 000 K7   |       20 |           11 |     17 |
 
+
+# std::list — Strategijų palyginimas
+
+| Failas | Strat 1 (ms) | Strat 2 (ms) | Strat 3 (ms) |
+|--------|--------------|--------------|--------------|
+| 10 000 000 |  50 180  | 53 145       | 49 747 |
+| 1 000 000  |  5 503   |  5 289       |  4 892 |
+| 100 000    |    501   |    518       |    521 |
+| 10 000     |     51   |     59       |     51 |
+| 1 000 K6   |     16   |     10       |     19 |
+| 1 000 K7   |     16   |     10       |     14 |
+
+
+#### CLASS 
+
+# std::vector — Strategijų palyginimas
+
+| Failas | Strategija 1 (ms) | Strategija 2 (ms) | Strategija 3 (ms) |
+|--------|--------------------|--------------------|--------------------|
+| 10 000 000 | 51 361         | 54 228             | 61 690 |
+| 1 000 000  |  5 289         |  5 269             |  5 185 |
+| 100 000    |    603         |    493             |   536 |
+| 10 000     |     55         |     58             |     57 |
+| 1 000 K6   |     30         |     14             |     10 |
+| 1 000 K7   |      9         |      9             |      8 |
+| 100        |     13 |     11|      0             |      0
+
+
+# std::list — Strategijų palyginimas
+
+| Failas | Strategija 1 (ms) | Strategija 2 (ms) | Strategija 3 (ms) |
+|--------|--------------------|--------------------|--------------------|
+| 10 000 000 | 105 541        | 91 570             | 47 549 |
+| 1 000 000  |   4 696        |  4 714             |  4 757 |
+| 100 000    |     470        |    462             |    462 |
+| 10 000     |      61        |     57             |     54 |
+| 1 000 K6   |      10        |     13             |     14 |
+| 1 000 K7   |      13        |      7             |     16 |
+| 100        |       0        |      0             |      0 |
+
+
+# Naudojamos strategijos
+
+- **Strategija 1 — `partition_copy`**  
+  (kopijuojami elementai į du naujus konteinerius)
+
+- **Strategija 2 — `remove_if`**  
+  (pašalinami neatitinkantys elementai, likę perkeliami)
+
+- **Strategija 3 — `partition_inplace`**  
+  (naudojama `std::stable_partition`, elementai perrikiuojami vietoje, be papildomų kopijų)
+
+
+
+### SKIRTINGŲ OPTIMIZACIJU REZULTATAI
+
+## O1 optimizacijos rezultatai (/O1)
+
+### std::vector
+
+| Failas              | Strategija 1 | Strategija 2 | Strategija 3 |
+|---------------------|--------------|--------------|--------------|
+| 10 000 000 K6       | 54929        | 50345        | 50164        |
+| 1 000 000 K6        | 345901       | 3591         | 6400         |
+| 100 000 K6          | 1034         | 1156         | 1246         |
+| 10 000 K6           | 104          | 109          | 121          |
+| 1 000 K6            | 13           | 15           | 15           |
+| 1 000 K7            | 14           | 11           | 10           |
+| 100 K6              | 6            | 2            | 1            |
+
+### std::list
+
+| Failas              | Strategija 1 | Strategija 2 | Strategija 3 |
+|---------------------|--------------|--------------|--------------|
+| 10 000 000 K6       | 45781        | 42867        | 46698        |
+| 1 000 000 K6        | 12848        | 13916        | 13781        |
+| 100 000 K6          | 1117         | 883          | 889          |
+| 10 000 K6           | 101          | 118          | 106          |
+| 1 000 K6            | 21           | 12           | 15           |
+| 1 000 K7            | 14           | 10           | 14           |
+| 100 K6              | 1            | 2            | 2            |
+
+
+## O2 optimizacijos rezultatai (/O2)
+
+### std::vector
+
+| Failas              | Strategija 1 | Strategija 2 | Strategija 3 |
+|---------------------|--------------|--------------|--------------|
+| 10 000 000 K6       | 57197        | 57150        | 49950        |
+| 1 000 000 K6        | 8973         | 4759         | 4912         |
+| 100 000 K6          | 479          | 475          | 500          |
+| 10 000 K6           | 55           | 50           | 50           |
+| 1 000 K6            | 7            | 10           | 12           |
+| 1 000 K7            | 14           | 14           | 8            |
+| 100 K6              | 14           | 13           | 0            |
+
+### std::list
+
+| Failas              | Strategija 1 | Strategija 2 | Strategija 3 |
+|---------------------|--------------|--------------|--------------|
+| 10 000 000 K6       | 45683        | 43222        | 81995        |
+| 1 000 000 K6        | 4469         | 4334         | 4640         |
+| 100 000 K6          | 444          | 428          | 449          |
+| 10 000 K6           | 53           | 53           | 53           |
+| 1 000 K6            | 12           | 14           | 9            |
+| 1 000 K7            | 9            | 12           | 14           |
+| 100 K6              | 0            | 0            | 0            |
+
+
+## O3 optimizacijos rezultatai (/Ox ≈ O3)
+
+### std::vector
+
+| Failas              | Strategija 1 | Strategija 2 | Strategija 3 |
+|---------------------|--------------|--------------|--------------|
+| 10 000 000 K6       | 47677        | 47455        | 48920        |
+| 1 000 000 K6        | 4781         | 4879         | 4754         |
+| 100 000 K6          | 467          | 473          | 485          |
+| 10 000 K6           | 44           | 47           | 64           |
+| 1 000 K6            | 7            | 30           | 6            |
+| 1 000 K7            | 7            | 12           | 7            |
+| 100 K6              | 0            | 0            | 0            |
+
+### std::list
+
+| Failas              | Strategija 1 | Strategija 2 | Strategija 3 |
+|---------------------|--------------|--------------|--------------|
+| 10 000 000 K6       | 44566        | 43120        | 46315        |
+| 1 000 000 K6        | 4411         | 4138         | 4360         |
+| 100 000 K6          | 440          | 435          | 433          |
+| 10 000 K6           | 49           | 49           | 49           |
+| 1 000 K6            | 11           | 4            | 6            |
+| 1 000 K7            | 8            | 11           | 6            |
+| 100 K6              | 0            | 0            | 0            |
