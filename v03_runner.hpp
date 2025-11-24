@@ -19,8 +19,12 @@ void run_v03(const std::string& failas, int strategija, int method, int rikiavim
     else if (strategija == 2) {
         split_groups_remove<Tag>(all, varg, kiet, method, &t_split);
     }
+    else if (strategija == 3) {
+        split_groups_partition<Tag>(all, varg, kiet, method, &t_split);
+    }
     else {
-        split_groups_inplace<Tag>(all, varg, kiet, method, &t_split);
+        std::cerr << "Neteisinga strategija: " << strategija << "\n";
+        return;
     }
 
     sort_groups<Tag>(varg, kiet, rikiavimas, &t_sort);

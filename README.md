@@ -1,4 +1,98 @@
-﻿### STRUCT
+﻿## Projekto paskirtis
+
+Ši programa skirta apdoroti didelius studentų įrašų kiekius ir suskirstyti juos į dvi kategorijas:
+
+- Vargšiukai: studentai, kurių galutinis balas < 5  
+- Kietiakiai: studentai, kurių galutinis balas ≥ 5  
+
+Naudojami du skirtingi konteineriai:
+
+- `std::vector<Studentas>`
+- `std::list<Studentas>`
+
+Trys skaidymo strategijos:
+
+1. `partition_copy`
+2. `remove_if`
+3. `partition`
+
+Programa gali veikti:
+
+- **Interaktyviu režimu**
+- **Benchmark režimu** (automatiniai testai visiems failams)
+
+
+### Sistemos informacija
+- Procesorius: 12th gen Intel i7-12650H
+- Operatyvioji atmintis (RAM): 16GB
+- Diskas: SSD
+- Operacinė sistema:  Windows 11, 64-bit
+*Nuadojama Visual Studio 2022*
+
+
+*exe failo dydis: 113Kb*
+## Kalbos standartas
+
+C++20 Standart
+
+## Naudojimas
+
+FAILŲ GENERAVIMAS:
+1. Paleisti programą.
+2. UI pasirinkti 'Įprastą režimą'
+3. Generuoti naujus failus.
+
+DARBAS SU FAILAIS:
+1. Paleisti programą.
+2. Pasirinkti režimą:
+   - **1** – normalus režimas
+   - **2** – benchmark režimas
+3. Benchmark režimas automatiškai ištestuos visus įmanomus scenarijus, o 'normalus režimas' -> 'esamo failo naudojimas' leis dirbti su failais po vieną. 
+
+
+### `partition_copy`
+
+`partition_copy` nekeičia originalaus konteinerio.
+
+Ji pereina per visus elementus ir kiekvieną nukopijuoja į vieną iš dviejų
+naujų konteinerių — **vargšiukus** ir **kietiakius**.
+
+Tai saugus metodas, nes originalūs duomenys lieka nepakitę, tačiau strategijai
+reikia papildomos atminties. Praktikoje ji labai greita su `std::vector`,
+nes rašo nuosekliai į du ištisinius masyvus.
+
+
+### `remove_if`
+
+`remove_if` modifikuoja originalų konteinerį.
+
+Ji pašalina visus elementus, kurie neturi likti, ir palieka tik vieną
+grupę. Šis metodas iš esmės nėra tikras skaidymas į dvi dalis — jis
+tiesiog “išmeta” vieną iš kategorijų.
+
+Strategija taupi atminčiai, bet nepraktiška, kai reikia **abiejų**
+grupių. Dideliuose failuose dažnai veikia lėčiau nei kiti metodai.
+
+
+### `partition`
+
+`partition` taip pat keičia originalų konteinerį, tačiau nieko
+neištrina — tik pertvarko elementus.
+
+Po operacijos konteineryje pirmoje pusėje atsiduria visi elementai,
+tenkinantys predikatą, antroje — visi kiti. Ribos iteratorius leidžia
+šį vieną konteinerį logiškai padalinti į dvi dalis.
+
+Šiai strategijai beveik nereikia papildomos atminties. Su `std::list`
+ji ypač greita, nes perrišamos tik mazgų rodyklės, o ne kopijuojami
+duomenys.
+
+
+
+Visuose testuose fiksuojamas tik **bendras programos veikimo laikas (ms)**.
+
+
+### STRUCT
 
 # std::vector — Strategijų palyginimas
 
@@ -60,8 +154,8 @@
 - **Strategija 2 — `remove_if`**  
   (pašalinami neatitinkantys elementai, likę perkeliami)
 
-- **Strategija 3 — `partition_inplace`**  
-  (naudojama `std::stable_partition`, elementai perrikiuojami vietoje, be papildomų kopijų)
+- **Strategija 3 — `partition`*
+ 
 
 
 

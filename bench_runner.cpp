@@ -18,17 +18,16 @@ struct Strategija {
 void run_benchmarks() {
     std::vector<fs::path> failai;
 
-    for (const auto& entry : fs::directory_iterator(".")) {
+    for (const auto& entry : fs::directory_iterator(fs::current_path())) {
         if (!entry.is_regular_file()) continue;
-        auto p = entry.path();
-        auto name = p.filename().string();
-        if (name.rfind("studentai_", 0) == 0 && name.size() >= 4 && name.substr(name.size() - 4) == ".txt") {
+        const auto& p = entry.path();
+        if (p.extension() == ".txt") {
             failai.push_back(p);
         }
     }
 
     if (failai.empty()) {
-        std::cout << "Nerasta studentu txt failu (studentai_*.txt).\n";
+        std::cout << "Nerasta .txt failu benchmarkams.\n";
         return;
     }
 
@@ -42,7 +41,7 @@ void run_benchmarks() {
     Strategija strategijos[] = {
         {1, "partition_copy"},
         {2, "remove_if"},
-        {3, "partition_inplace"}
+        {3, "partition"}
     };
 
     int method = 1;

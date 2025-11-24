@@ -91,7 +91,7 @@ void split_groups_remove(ContainerT<Tag, Studentas>& all,
 }
 
 template<typename Tag>
-void split_groups_inplace(ContainerT<Tag, Studentas>& all,
+void split_groups_partition(ContainerT<Tag, Studentas>& all,
     ContainerT<Tag, Studentas>& varg,
     ContainerT<Tag, Studentas>& kiet,
     int method,
@@ -114,11 +114,22 @@ void split_groups_inplace(ContainerT<Tag, Studentas>& all,
 template<typename Tag>
 void sort_one(ContainerT<Tag, Studentas>& c, int rikiavimas) {
     if (rikiavimas == 0) return;
-    if constexpr (std::is_same_v<ContainerT<Tag, Studentas>, std::list<Studentas>>) {
-        c.sort(less_pavarde_vardas);
+    using Cont = ContainerT<Tag, Studentas>;
+    if constexpr (std::is_same_v<Cont, std::list<Studentas>>) {
+        if (rikiavimas == 1) {
+            c.sort(less_pavarde_vardas);
+        }
+        else {
+            c.sort(less_vardas_pavarde);
+        }
     }
     else {
-        std::sort(c.begin(), c.end(), less_pavarde_vardas);
+        if (rikiavimas == 1) {
+            std::sort(c.begin(), c.end(), less_pavarde_vardas);
+        }
+        else {
+            std::sort(c.begin(), c.end(), less_vardas_pavarde);
+        }
     }
 }
 
@@ -147,11 +158,20 @@ void write_groups(const ContainerT<Tag, Studentas>& varg,
 {
     auto start = clock_t_v03::now();
 
-    std::ofstream fv("vargsiukai.txt");
-    std::ofstream fk("kietiakai.txt");
+    using Cont = ContainerT<Tag, Studentas>;
 
-    isvesti_rezultatus(fv, varg, method);
-    isvesti_rezultatus(fk, kiet, method);
+    if constexpr (std::is_same_v<Cont, std::vector<Studentas>>) {
+        std::ofstream out_varg("vargsiukai.txt");
+        std::ofstream out_kiet("kietiakai.txt");
+        isvesti_rezultatus(out_varg, varg, method);
+        isvesti_rezultatus(out_kiet, kiet, method);
+    }
+    else {
+        std::ofstream out_varg("vargsiukai.txt");
+        std::ofstream out_kiet("kietiakai.txt");
+        isvesti_rezultatus(out_varg, varg, method);
+        isvesti_rezultatus(out_kiet, kiet, method);
+    }
 
     auto end = clock_t_v03::now();
     if (out_write_ms) {
@@ -180,11 +200,11 @@ template void split_groups_remove<ListTag>(ContainerT<ListTag, Studentas>&,
     ContainerT<ListTag, Studentas>&,
     int, long long*);
 
-template void split_groups_inplace<VectorTag>(ContainerT<VectorTag, Studentas>&,
+template void split_groups_partition<VectorTag>(ContainerT<VectorTag, Studentas>&,
     ContainerT<VectorTag, Studentas>&,
     ContainerT<VectorTag, Studentas>&,
     int, long long*);
-template void split_groups_inplace<ListTag>(ContainerT<ListTag, Studentas>&,
+template void split_groups_partition<ListTag>(ContainerT<ListTag, Studentas>&,
     ContainerT<ListTag, Studentas>&,
     ContainerT<ListTag, Studentas>&,
     int, long long*);

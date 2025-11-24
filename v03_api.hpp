@@ -21,7 +21,7 @@ void split_groups_remove(ContainerT<Tag, Studentas>& all,
     long long* out_split_ms);
 
 template<typename Tag>
-void split_groups_inplace(ContainerT<Tag, Studentas>& all,
+void split_groups_partition(ContainerT<Tag, Studentas>& all,
     ContainerT<Tag, Studentas>& varg,
     ContainerT<Tag, Studentas>& kiet,
     int method,
