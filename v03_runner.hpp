@@ -2,35 +2,16 @@
 #include <iostream>
 #include <type_traits>
 #include <string>
-
 #include "konteineriu_pasirinkimas.hpp"
 #include "v03_api.hpp"
 
 template<typename Tag>
-void split_groups_remove(ContainerT<Tag, Studentas>& all,
-    ContainerT<Tag, Studentas>& varg,
-    ContainerT<Tag, Studentas>& kiet,
-    int method,
-    long long* out_split_ms);
-
-template<typename Tag>
-void split_groups_inplace(ContainerT<Tag, Studentas>& all,
-    ContainerT<Tag, Studentas>& varg,
-    ContainerT<Tag, Studentas>& kiet,
-    int method,
-    long long* out_split_ms);
-
-template<typename Tag>
-void run_v03(const std::string& path, int method, int rikiavimas) {
+void run_v03(const std::string& failas, int strategija, int method, int rikiavimas) {
     long long t_read = 0, t_split = 0, t_sort = 0, t_write = 0;
 
-    auto all = read_all<Tag>(path, &t_read);
-
-    ContainerT<Tag, Studentas> varg, kiet;
-
-    int strategija = 1;
-    std::cout << "Pasirinkite skaidymo strategija (1 - partition_copy, 2 - remove_if, 3 - partition): ";
-    std::cin >> strategija;
+    auto all = read_all<Tag>(failas, &t_read);
+    ContainerT<Tag, Studentas> varg;
+    ContainerT<Tag, Studentas> kiet;
 
     if (strategija == 1) {
         split_groups<Tag>(all, varg, kiet, method, &t_split);
@@ -57,4 +38,10 @@ void run_v03(const std::string& path, int method, int rikiavimas) {
     }
 
     std::cout << "---------------------------------------\n";
+}
+
+template<typename Tag>
+void run_v03(const std::string& failas, int method, int rikiavimas) {
+    int strategija = 3;
+    run_v03<Tag>(failas, strategija, method, rikiavimas);
 }

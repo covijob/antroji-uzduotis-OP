@@ -1,24 +1,29 @@
 #include "generatorius.hpp"
 #include <fstream>
-#include <iostream>
+#include <iomanip>
+#include <string>
+#include <vector>
 
-void generuoti_faila(std::mt19937& rng, const std::string& failo_vardas,
-    std::size_t N, std::size_t K, int minP, int maxP) {
-    std::ofstream out(failo_vardas);
-    if (!out) {
-        std::cerr << "Nepavyko sukurti failo: " << failo_vardas << '\n';
-        return;
-    }
+void generuoti_faila(std::mt19937& rng,
+    const std::string& vardas,
+    std::size_t kiek,
+    std::size_t nd_kiekis)
+{
+    std::uniform_int_distribution<int> pazymys(1, 10);
 
-    out << "Pavarde Vardas";
-    for (std::size_t i = 1; i <= K; i++) out << " ND" << i;
-    out << " Egzaminas\n";
+    std::ofstream out(vardas);
+    out << "Pavarde Vardas ";
+    for (std::size_t i = 0; i < nd_kiekis; ++i) out << "ND" << i + 1 << " ";
+    out << "Egzaminas\n";
 
-    std::uniform_int_distribution<int> distPaz(minP, maxP);
+    for (std::size_t i = 0; i < kiek; ++i) {
+        out << "Pavarde" << i << " "
+            << "Vardas" << i << " ";
 
-    for (std::size_t j = 1; j <= N; j++) {
-        out << "Pavarde" << j << " Vardas" << j;
-        for (std::size_t k = 1; k <= K; k++) out << " " << distPaz(rng);
-        out << " " << distPaz(rng) << "\n";
+        for (std::size_t j = 0; j < nd_kiekis; ++j) {
+            out << pazymys(rng) << " ";
+        }
+
+        out << pazymys(rng) << "\n";
     }
 }

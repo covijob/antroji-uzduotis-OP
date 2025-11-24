@@ -127,14 +127,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="bench_runner.cpp" />
     <ClCompile Include="formatas.cpp" />
     <ClCompile Include="generatorius.cpp" />
     <ClCompile Include="ivestis.cpp" />
     <ClCompile Include="Pirmoji-uzduotis.cpp" />
     <ClCompile Include="skaiciavimas.cpp" />
-    <ClCompile Include="streaming.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="v03_api.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
@@ -147,13 +145,13 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="bench_runner.hpp" />
     <ClInclude Include="formatas.hpp" />
     <ClInclude Include="generatorius.hpp" />
     <ClInclude Include="ivestis.hpp" />
     <ClInclude Include="konteineriu_pasirinkimas.hpp" />
     <ClInclude Include="skaiciavimas.hpp" />
     <ClInclude Include="sort.hpp" />
-    <ClInclude Include="streaming.hpp" />
     <ClInclude Include="studentai.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

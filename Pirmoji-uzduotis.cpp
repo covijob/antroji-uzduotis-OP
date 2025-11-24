@@ -1,269 +1,183 @@
 ﻿#include <iostream>
-#include <fstream>
-#include <iomanip>
-#include <vector>
-#include <list>
 #include <string>
-#include <limits>
-#include <sstream>
-#include <algorithm>
-#include <random>
-#include <cstdlib>
-#include <chrono>
-#include <thread>
+#include <vector>
 #include <filesystem>
+#include <random>
+#include <fstream>
+#include <algorithm>
 
-#include "studentai.hpp"
-#include "skaiciavimas.hpp"
-#include "ivestis.hpp"
-#include "sort.hpp"
-#include "generatorius.hpp"
-#include "formatas.hpp"
-#include "streaming.hpp"
-#include "konteineriu_pasirinkimas.hpp"
 #include "v03_runner.hpp"
+#include "konteineriu_pasirinkimas.hpp"
+#include "generatorius.hpp"
+#include "bench_runner.hpp"
+
+namespace fs = std::filesystem;
+
+std::size_t nustatyti_eiluciu_kieki(const std::string& failas) {
+    std::ifstream in(failas);
+    if (!in) return 0;
+
+    std::string line;
+    std::size_t n = 0;
+    bool pirmas = true;
+
+    while (std::getline(in, line)) {
+        if (pirmas) {
+            pirmas = false;
+            continue;
+        }
+        if (line.find_first_not_of(" \t\r\n") == std::string::npos) continue;
+        ++n;
+    }
+
+    return n;
+}
 
 int main() {
-    using clock = std::chrono::steady_clock;
-    auto ms = [](auto dt) { return std::chrono::duration_cast<std::chrono::milliseconds>(dt).count(); };
-
     std::ios::sync_with_stdio(false);
-    namespace fs = std::filesystem;
+    std::cin.tie(nullptr);
 
-    std::string pr = "studentai1.txt";
-    int pasirinktas_saltinis = 1;
-    std::cout << "Pasirinkite duomenu saltini (1 - txt failas, 2 - atsitiktinai generuoti duomenys, 3 - rankinis ivedimas): \n";
-    std::cout << "__________________________________________________________\n";
-    if (!(std::cin >> pasirinktas_saltinis) || (pasirinktas_saltinis < 1 || pasirinktas_saltinis > 3)) {
-        std::cout << "Prasome pasirinkti 1, 2 arba 3.\n";
+    int rezimas = 0;
+    std::cout << "Pasirinkite rezima:\n";
+    std::cout << "1 - Benchmark rezimas (bench_runner: visi txt, visos strategijos, visi konteineriai)\n";
+    std::cout << "2 - Iprastas rezimas (darbas su vienu pasirinktu failu / generavimas)\n";
+    std::cout << "Jusu pasirinkimas: ";
+    std::cin >> rezimas;
+
+    if (!std::cin) {
+        std::cerr << "Neteisinga ivestis.\n";
         return 1;
     }
 
-    std::vector<std::string> sugeneruoti;
-
-    if (pasirinktas_saltinis == 1) {
-        std::vector<std::string> visi_txt;
-        for (const auto& entry : fs::directory_iterator(".")) {
-            if (!entry.is_regular_file()) continue;
-            auto path = entry.path();
-            if (path.extension() == ".txt") {
-                visi_txt.push_back(path.filename().string());
-            }
-        }
-
-        if (visi_txt.empty()) {
-            std::cout << "Aplanke nerasta .txt failu. Naudojamas numatytasis: " << pr << "\n";
-        }
-        else {
-            std::sort(visi_txt.begin(), visi_txt.end());
-            std::cout << "Rasti .txt failai:\n";
-            for (std::size_t i = 0; i < visi_txt.size(); ++i) {
-                std::cout << i + 1 << " - " << visi_txt[i] << "\n";
-            }
-            std::cout << "Pasirinkite faila pagal numeri: ";
-            int pasirinktas_failas = 0;
-            while (!(std::cin >> pasirinktas_failas) ||
-                pasirinktas_failas < 1 ||
-                pasirinktas_failas > static_cast<int>(visi_txt.size())) {
-                std::cin.clear();
-                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                std::cout << "Blogas pasirinkimas. Bandykite dar karta: ";
-            }
-            pr = visi_txt[pasirinktas_failas - 1];
-            std::cout << ">> Pasirinktas failas: " << pr << "\n";
-        }
+    if (rezimas == 1) {
+        run_benchmarks();
+        return 0;
     }
 
-    if (pasirinktas_saltinis == 2) {
-        std::mt19937 rng(std::random_device{}());
-        std::uniform_int_distribution<int> distK(6, 7);
-        int K = distK(rng);
+    if (rezimas != 2) {
+        std::cerr << "Neteisingas pasirinkimas.\n";
+        return 1;
+    }
 
-        std::vector<std::size_t> N_list = { 1000, 10000, 100000, 1000000, 10000000 };
+    int veiksmas = 0;
+    std::cout << "\nPasirinkite veiksma:\n";
+    std::cout << "1 - Naudoti jau esama .txt faila\n";
+    std::cout << "2 - Sugeneruoti naujus .txt failus (100..10000000 eiluciu)\n";
+    std::cout << "Jusu pasirinkimas: ";
+    std::cin >> veiksmas;
 
-        std::cout << "Generavimas (K=" << K << "):\n";
-        long long gen_total_ms = 0;
-        for (auto N : N_list) {
-            std::string vardas = "studentai_" + std::to_string(N) + "_K" + std::to_string(K) + ".txt";
+    if (!std::cin) {
+        std::cerr << "Neteisinga ivestis.\n";
+        return 1;
+    }
 
-            auto t0 = clock::now();
-            generuoti_faila(rng, vardas, N, static_cast<std::size_t>(K));
-            auto t1 = clock::now();
+    std::string failas;
 
-            long long took = ms(t1 - t0);
-            gen_total_ms += took;
+    if (veiksmas == 2) {
+        std::random_device rd;
+        std::mt19937 rng(rd());
+
+        constexpr std::size_t K = 6;
+        const std::size_t dydziai[] = { 100, 1000, 10000, 100000, 1000000, 10000000 };
+
+        std::vector<std::string> sugeneruoti;
+
+        for (std::size_t N : dydziai) {
+            std::string vardas = "studentai_" + std::to_string(N) + "_K6.txt";
+            generuoti_faila(rng, vardas, N, K);
+            std::cout << "Sugeneruotas failas: " << vardas << "\n";
             sugeneruoti.push_back(vardas);
-            std::cout << "  - Sugeneruotas: " << vardas << " (" << took << " ms)\n";
         }
 
-        std::cout << "Visu " << sugeneruoti.size() << " failu generavimas: " << gen_total_ms << " ms\n";
+        std::cout << "Visi failai sugeneruoti.\n\n";
 
         std::cout << "Pasirinkite kuri sugeneruota faila naudoti:\n";
-        for (size_t i = 0; i < sugeneruoti.size(); i++) {
+        for (std::size_t i = 0; i < sugeneruoti.size(); ++i) {
             std::cout << i + 1 << " - " << sugeneruoti[i] << "\n";
         }
-        int pasirinktas_failas = 0;
-        while (!(std::cin >> pasirinktas_failas) ||
-            pasirinktas_failas < 1 || pasirinktas_failas >(int)sugeneruoti.size()) {
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            std::cout << "Blogas pasirinkimas. Bandykite dar karta: ";
-        }
-        pr = sugeneruoti[pasirinktas_failas - 1];
-        std::cout << ">> Pasirinktas failas: " << pr << "\n";
-    }
 
-    int vartotojo_pasirinkimas = 1;
-    std::cout << "Pasirinkite skaiciavimo buda (1 - vidurkis, 2 - mediana, 3 - vidurkis ir mediana): \n";
-    std::cout << "__________________________________________________________\n";
-    while (!(std::cin >> vartotojo_pasirinkimas) || (vartotojo_pasirinkimas < 1 || vartotojo_pasirinkimas > 3)) {
-        std::cin.clear();
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        std::cout << "Prasome pasirinkti 1, 2 arba 3: ";
-    }
+        std::size_t idx = 0;
+        std::cout << "Jusu pasirinkimas: ";
+        std::cin >> idx;
 
-    int rikiavimo_pasirinkimas = 1;
-    std::cout << "Pasirinkite rikiavimo parametra (1 - studento vardas, 2 - studento pavarde)\n";
-    std::cout << "__________________________________________________________\n";
-    while (!(std::cin >> rikiavimo_pasirinkimas) || (rikiavimo_pasirinkimas != 1 && rikiavimo_pasirinkimas != 2)) {
-        std::cin.clear();
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        std::cout << "Prasome pasirinkti 1 arba 2: ";
-    }
-
-    int konteineris = 1;
-    std::cout << "Pasirinkite konteineri (1 - std::vector, 2 - std::list): \n";
-    std::cout << "__________________________________________________________\n";
-    while (!(std::cin >> konteineris) || (konteineris != 1 && konteineris != 2)) {
-        std::cin.clear();
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        std::cout << "Prasome pasirinkti 1 arba 2: ";
-    }
-
-    std::vector<Studentas> grupe;
-
-    if (pasirinktas_saltinis != 3) {
-        int versija = 0;
-        std::cout << "Pasirinkite versija (1 - v0.2 streaming, 2 - v0.3 konteineriai): \n";
-        std::cout << "__________________________________________________________\n";
-        while (!(std::cin >> versija) || (versija != 1 && versija != 2)) {
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            std::cout << "Prasome pasirinkti 1 arba 2: ";
+        if (idx < 1 || idx > sugeneruoti.size()) {
+            std::cerr << "Neteisingas pasirinkimas.\n";
+            return 1;
         }
 
-        int palyginimas = 0;
-        std::cout << "Ar norite paleisti visus 3 strategiju testus automatiskai? (1 - taip, 0 - ne): ";
-        std::cin >> palyginimas;
+        failas = sugeneruoti[idx - 1];
+    }
+    else if (veiksmas == 1) {
+        std::vector<std::string> txt_failai;
 
-        if (palyginimas == 1 && versija == 2) {
-            std::cout << "\nAutomatinis strategiju palyginimo rezimas (v0.3):\n";
-            for (int s = 1; s <= 3; s++) {
-                std::cout << "\nStrategija " << s << ":\n";
-                if (konteineris == 1) run_v03<VectorTag>(pr, vartotojo_pasirinkimas, rikiavimo_pasirinkimas);
-                else run_v03<ListTag>(pr, vartotojo_pasirinkimas, rikiavimo_pasirinkimas);
+        for (const auto& entry : fs::directory_iterator(".")) {
+            if (!entry.is_regular_file()) continue;
+            auto name = entry.path().filename().string();
+            if (name.size() >= 4 && name.substr(name.size() - 4) == ".txt") {
+                txt_failai.push_back(name);
             }
+        }
+
+        if (txt_failai.empty()) {
+            std::cout << "Kataloge nerasta jokiu .txt failu.\n";
             return 0;
         }
 
-        if (versija == 1) {
-            long long t_read_ms = 0, t_split_ms = 0, t_write_ms = 0;
-            split_streaming(pr, vartotojo_pasirinkimas, rikiavimo_pasirinkimas,
-                &t_read_ms, &t_split_ms, &t_write_ms);
+        std::sort(txt_failai.begin(), txt_failai.end());
 
-            std::cout << "--------------------------------------------------\n";
-            std::cout << "Santrauka (v0.2 streaming):\n";
-            std::cout << "  Nuskaitymas: " << t_read_ms << " ms\n";
-            std::cout << "  Skirstymas:  " << t_split_ms << " ms\n";
-            std::cout << "  Isvedimas:   " << t_write_ms << " ms\n";
-            std::cout << "  Bendra:      " << (t_read_ms + t_split_ms + t_write_ms) << " ms\n";
-        }
-        else {
-            if (pasirinktas_saltinis == 2 && !sugeneruoti.empty()) {
-                for (const auto& failas : sugeneruoti) {
-                    std::cout << "\n=== Testas su failu: " << failas << " ===\n";
-                    run_v03<VectorTag>(failas, vartotojo_pasirinkimas, rikiavimo_pasirinkimas);
-                    run_v03<ListTag>(failas, vartotojo_pasirinkimas, rikiavimo_pasirinkimas);
-                }
-
-            }
-            else {
-                if (konteineris == 1) {
-                    run_v03<VectorTag>(pr, vartotojo_pasirinkimas, rikiavimo_pasirinkimas);
-                }
-                else {
-                    run_v03<ListTag>(pr, vartotojo_pasirinkimas, rikiavimo_pasirinkimas);
-                }
-            }
-
-            std::cout << "\n--- Atminties adresu diagnostika ---\n";
-            Studentas s1, s2;
-            std::vector<Studentas> v;
-            std::list<Studentas> l;
-            v.push_back(s1);
-            v.push_back(s2);
-            l.push_back(s1);
-            l.push_back(s2);
-            std::cout << "Vector elementas 1: " << &v[0] << "\n";
-            std::cout << "Vector elementas 2: " << &v[1] << "\n";
-            std::cout << "List elementas 1: " << &(*l.begin()) << "\n";
-            auto it = l.begin();
-            ++it;
-            std::cout << "List elementas 2: " << &(*it) << "\n";
+        std::cout << "Rasti .txt failai:\n";
+        for (std::size_t i = 0; i < txt_failai.size(); ++i) {
+            std::size_t n = nustatyti_eiluciu_kieki(txt_failai[i]);
+            std::cout << i + 1 << " - " << txt_failai[i];
+            if (n > 0) std::cout << " (" << n << " eiluciu)";
+            std::cout << "\n";
         }
 
-        return 0;
+        std::size_t idx = 0;
+        std::cout << "Pasirinkite faila pagal numeri: ";
+        std::cin >> idx;
+
+        if (idx < 1 || idx > txt_failai.size()) {
+            std::cerr << "Neteisingas pasirinkimas.\n";
+            return 1;
+        }
+
+        failas = txt_failai[idx - 1];
+    }
+    else {
+        std::cerr << "Neteisingas pasirinkimas.\n";
+        return 1;
     }
 
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    ivedimas_is_konsoles(grupe);
+    std::cout << "\nPasirinktas failas: " << failas << "\n";
 
-    if (grupe.empty()) {
-        std::cout << " Nera nei vieno studento.\n";
-        return 0;
+    int kont = 0;
+    std::cout << "Pasirinkite konteineri (1 - vector, 2 - list): ";
+    std::cin >> kont;
+
+    int method = 0;
+    std::cout << "Pasirinkite galutinio balo metoda (1 - vidurkis, 2 - mediana): ";
+    std::cin >> method;
+
+    int rikiavimas = 0;
+    std::cout << "Ar rikiuoti rezultatus? (0 - ne, 1 - pagal pavarde/varda): ";
+    std::cin >> rikiavimas;
+
+    int strategija = 0;
+    std::cout << "Pasirinkite strategija (1 - partition_copy, 2 - remove_if, 3 - partition_inplace): ";
+    std::cin >> strategija;
+
+    if (strategija < 1 || strategija > 3) {
+        std::cerr << "Neteisingas strategijos pasirinkimas.\n";
+        return 1;
     }
 
-    if (rikiavimo_pasirinkimas == 1) merge_sort(grupe, less_vardas_pavarde);
-    else merge_sort(grupe, less_pavarde_vardas);
-
-    auto t_split0 = clock::now();
-    std::vector<Studentas> vargsiukai;
-    std::vector<Studentas> kietiakiai;
-    vargsiukai.reserve(grupe.size());
-    kietiakiai.reserve(grupe.size());
-
-    for (const auto& s : grupe) {
-        double galutinis = s.galutinis(vartotojo_pasirinkimas);
-        if (galutinis < 5.0) vargsiukai.push_back(s);
-        else kietiakiai.push_back(s);
+    if (kont == 1) {
+        run_v03<VectorTag>(failas, strategija, method, rikiavimas);
     }
-    
-    auto t_split1 = clock::now();
-    std::cout << "Skirstymas i dvi kategorijas: "
-        << ms(t_split1 - t_split0) << " ms.  (Vargsiukai: "
-        << vargsiukai.size() << ", Kietiakiai: " << kietiakiai.size() << ")\n";
-
-    std::cout << ">>> Kuriami failai...\n";
-    long long write_total_ms = 0;
-
-    auto t_w1_0 = clock::now();
-    failo_formatavimas("vargsiukai.txt", vargsiukai, vartotojo_pasirinkimas);
-    auto t_w1_1 = clock::now();
-    long long w_vargsiukai = ms(t_w1_1 - t_w1_0);
-    write_total_ms += w_vargsiukai;
-
-    auto t_w2_0 = clock::now();
-    failo_formatavimas("kietiakiai.txt", kietiakiai, vartotojo_pasirinkimas);
-    auto t_w2_1 = clock::now();
-    long long w_kietiakiai = ms(t_w2_1 - t_w2_0);
-    write_total_ms += w_kietiakiai;
-
-    failo_formatavimas("rezultatas.txt", grupe, vartotojo_pasirinkimas);
-
-    std::cout << "  - vargsiukai.txt: " << w_vargsiukai << " ms\n";
-    std::cout << "  - kietiakiai.txt: " << w_kietiakiai << " ms\n";
-    std::cout << "Isvedimo i du failus suma: " << write_total_ms << " ms\n";
-    std::cout << ">>> Viskas baigta.\n";
+    else {
+        run_v03<ListTag>(failas, strategija, method, rikiavimas);
+    }
 
     return 0;
 }

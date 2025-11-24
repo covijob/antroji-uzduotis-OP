@@ -1,42 +1,32 @@
 #include "v03_api.hpp"
 #include "skaiciavimas.hpp"
 #include "ivestis.hpp"
-#include "sort.hpp"
 #include "formatas.hpp"
-#include <vector>
-#include <list>
+#include "sort.hpp"
 #include <algorithm>
 #include <chrono>
-#include <iostream>
+#include <fstream>
 #include <type_traits>
+#include <list>
+#include <vector>
+#include <iterator>
+
+using clock_t_v03 = std::chrono::steady_clock;
 
 template<typename Tag>
 ContainerT<Tag, Studentas> read_all(const std::string& path, long long* out_read_ms) {
-    auto t0 = std::chrono::steady_clock::now();
+    auto start = clock_t_v03::now();
+    ContainerT<Tag, Studentas> v;
+    skaityti_is_failo(path, v);
+    auto end = clock_t_v03::now();
+    if (out_read_ms) {
+        *out_read_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+    }
+    return v;
+}
 
-    if constexpr (std::is_same_v<Tag, VectorTag>) {
-        std::vector<Studentas> students;
-        students.reserve(10000);
-        if (!skaityti_is_failo(path, students)) {
-            std::cerr << "Failed to read file: " << path << "\n";
-        }
-        auto t1 = std::chrono::steady_clock::now();
-        if (out_read_ms) *out_read_ms = std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count();
-        return students;
-    }
-    else {
-        std::list<Studentas> students;
-        std::vector<Studentas> tmp;
-        if (skaityti_is_failo(path, tmp)) {
-            for (auto& s : tmp) students.push_back(std::move(s));
-        }
-        else {
-            std::cerr << "Failed to read file: " << path << "\n";
-        }
-        auto t1 = std::chrono::steady_clock::now();
-        if (out_read_ms) *out_read_ms = std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count();
-        return students;
-    }
+static inline bool is_kietas(const Studentas& s, int method) {
+    return s.galutinis(method) >= 5.0;
 }
 
 template<typename Tag>
@@ -44,30 +34,19 @@ void split_groups(ContainerT<Tag, Studentas>& all,
     ContainerT<Tag, Studentas>& varg,
     ContainerT<Tag, Studentas>& kiet,
     int method,
-    long long* out_split_ms) {
+    long long* out_split_ms)
+{
+    auto start = clock_t_v03::now();
 
-    auto t0 = std::chrono::steady_clock::now();
-
-    varg.clear();
-    kiet.clear();
-
-    if constexpr (std::is_same_v<Tag, VectorTag>) {
-        varg.reserve(all.size());
-        kiet.reserve(all.size());
+    for (auto& s : all) {
+        if (is_kietas(s, method)) kiet.emplace_back(s);
+        else varg.emplace_back(s);
     }
 
-    auto is_varg = [method](const Studentas& s) {
-        return s.galutinis(method) < 5.0;
-        };
-
-
-    std::partition_copy(all.begin(), all.end(),
-        std::back_inserter(varg),
-        std::back_inserter(kiet),
-        is_varg);
-
-    auto t1 = std::chrono::steady_clock::now();
-    if (out_split_ms) *out_split_ms = std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count();
+    auto end = clock_t_v03::now();
+    if (out_split_ms) {
+        *out_split_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+    }
 }
 
 template<typename Tag>
@@ -75,30 +54,40 @@ void split_groups_remove(ContainerT<Tag, Studentas>& all,
     ContainerT<Tag, Studentas>& varg,
     ContainerT<Tag, Studentas>& kiet,
     int method,
-    long long* out_split_ms) {
+    long long* out_split_ms)
+{
+    auto start = clock_t_v03::now();
 
-    auto t0 = std::chrono::steady_clock::now();
+    using Cont = ContainerT<Tag, Studentas>;
 
-    varg.clear();
-    kiet.clear();
+    if constexpr (std::is_same_v<Cont, std::vector<Studentas>>) {
+        std::copy_if(all.begin(), all.end(),
+            std::back_inserter(kiet),
+            [&](const Studentas& s) { return is_kietas(s, method); });
 
-    if constexpr (std::is_same_v<Tag, VectorTag>) {
-        varg.reserve(all.size());
+        auto it = std::remove_if(all.begin(), all.end(),
+            [&](const Studentas& s) { return is_kietas(s, method); });
+
+        varg.assign(all.begin(), it);
+        all.erase(it, all.end());
+    }
+    else {
+        for (auto it = all.begin(); it != all.end();) {
+            if (is_kietas(*it, method)) {
+                auto cur = it++;
+                kiet.splice(kiet.end(), all, cur);
+            }
+            else {
+                ++it;
+            }
+        }
+        varg.splice(varg.end(), all);
     }
 
-    auto is_varg = [method](const Studentas& s) {
-        return s.galutinis(method) < 5.0;
-        };
-
-
-    std::copy_if(all.begin(), all.end(), std::back_inserter(varg), is_varg);
-
-    auto it = std::remove_if(all.begin(), all.end(), is_varg);
-    all.erase(it, all.end());
-    kiet = all;
-
-    auto t1 = std::chrono::steady_clock::now();
-    if (out_split_ms) *out_split_ms = std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count();
+    auto end = clock_t_v03::now();
+    if (out_split_ms) {
+        *out_split_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+    }
 }
 
 template<typename Tag>
@@ -106,101 +95,114 @@ void split_groups_inplace(ContainerT<Tag, Studentas>& all,
     ContainerT<Tag, Studentas>& varg,
     ContainerT<Tag, Studentas>& kiet,
     int method,
-    long long* out_split_ms) {
+    long long* out_split_ms)
+{
+    auto start = clock_t_v03::now();
 
-    auto t0 = std::chrono::steady_clock::now();
+    auto it = std::partition(all.begin(), all.end(),
+        [&](const Studentas& s) { return !is_kietas(s, method); });
 
-    varg.clear();
-    kiet.clear();
+    for (auto i = all.begin(); i != it; ++i) varg.emplace_back(*i);
+    for (auto i = it; i != all.end(); ++i) kiet.emplace_back(*i);
 
-    bool stable = false;
-    std::cout << "Naudoti stable partition (1 - taip, 0 - ne): ";
-    std::cin >> stable;
+    auto end = clock_t_v03::now();
+    if (out_split_ms) {
+        *out_split_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+    }
+}
 
-    auto is_varg = [method](const Studentas& s) {
-        return s.galutinis(method) < 5.0;
-        };
-
-
-    auto mid = stable
-        ? std::stable_partition(all.begin(), all.end(), is_varg)
-        : std::partition(all.begin(), all.end(), is_varg);
-
-    varg.insert(varg.end(), all.begin(), mid);
-    kiet.insert(kiet.end(), mid, all.end());
-
-    auto t1 = std::chrono::steady_clock::now();
-    if (out_split_ms) *out_split_ms = std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count();
+template<typename Tag>
+void sort_one(ContainerT<Tag, Studentas>& c, int rikiavimas) {
+    if (rikiavimas == 0) return;
+    if constexpr (std::is_same_v<ContainerT<Tag, Studentas>, std::list<Studentas>>) {
+        c.sort(less_pavarde_vardas);
+    }
+    else {
+        std::sort(c.begin(), c.end(), less_pavarde_vardas);
+    }
 }
 
 template<typename Tag>
 void sort_groups(ContainerT<Tag, Studentas>& varg,
     ContainerT<Tag, Studentas>& kiet,
     int rikiavimas,
-    long long* out_sort_ms) {
+    long long* out_sort_ms)
+{
+    auto start = clock_t_v03::now();
 
-    auto t0 = std::chrono::steady_clock::now();
+    sort_one<Tag>(varg, rikiavimas);
+    sort_one<Tag>(kiet, rikiavimas);
 
-    if constexpr (std::is_same_v<Tag, VectorTag>) {
-        if (rikiavimas == 1) {
-            std::sort(varg.begin(), varg.end(), less_vardas_pavarde);
-            std::sort(kiet.begin(), kiet.end(), less_vardas_pavarde);
-        }
-        else {
-            std::sort(varg.begin(), varg.end(), less_pavarde_vardas);
-            std::sort(kiet.begin(), kiet.end(), less_pavarde_vardas);
-        }
+    auto end = clock_t_v03::now();
+    if (out_sort_ms) {
+        *out_sort_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
     }
-    else {
-        if (rikiavimas == 1) {
-            varg.sort(less_vardas_pavarde);
-            kiet.sort(less_vardas_pavarde);
-        }
-        else {
-            varg.sort(less_pavarde_vardas);
-            kiet.sort(less_pavarde_vardas);
-        }
-    }
-
-    auto t1 = std::chrono::steady_clock::now();
-    if (out_sort_ms) *out_sort_ms = std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count();
 }
 
 template<typename Tag>
 void write_groups(const ContainerT<Tag, Studentas>& varg,
     const ContainerT<Tag, Studentas>& kiet,
     int method,
-    long long* out_write_ms) {
+    long long* out_write_ms)
+{
+    auto start = clock_t_v03::now();
 
-    auto t0 = std::chrono::steady_clock::now();
+    std::ofstream fv("vargsiukai.txt");
+    std::ofstream fk("kietiakai.txt");
 
-    if constexpr (std::is_same_v<Tag, VectorTag>) {
-        failo_formatavimas("vargsiukai.txt", varg, method);
-        failo_formatavimas("kietiakiai.txt", kiet, method);
+    isvesti_rezultatus(fv, varg, method);
+    isvesti_rezultatus(fk, kiet, method);
+
+    auto end = clock_t_v03::now();
+    if (out_write_ms) {
+        *out_write_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
     }
-    else {
-        std::vector<Studentas> v1(varg.begin(), varg.end());
-        std::vector<Studentas> v2(kiet.begin(), kiet.end());
-        failo_formatavimas("vargsiukai.txt", v1, method);
-        failo_formatavimas("kietiakiai.txt", v2, method);
-    }
-
-    auto t1 = std::chrono::steady_clock::now();
-    if (out_write_ms) *out_write_ms = std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count();
-
-    std::cout << "Saved: vargsiukai.txt (" << std::distance(varg.begin(), varg.end())
-        << "), kietiakiai.txt (" << std::distance(kiet.begin(), kiet.end()) << ")\n";
 }
 
 template ContainerT<VectorTag, Studentas> read_all<VectorTag>(const std::string&, long long*);
-template ContainerT<ListTag, Studentas>   read_all<ListTag>(const std::string&, long long*);
-template void split_groups<VectorTag>(ContainerT<VectorTag, Studentas>&, ContainerT<VectorTag, Studentas>&, ContainerT<VectorTag, Studentas>&, int, long long*);
-template void split_groups<ListTag>(ContainerT<ListTag, Studentas>&, ContainerT<ListTag, Studentas>&, ContainerT<ListTag, Studentas>&, int, long long*);
-template void sort_groups<VectorTag>(ContainerT<VectorTag, Studentas>&, ContainerT<VectorTag, Studentas>&, int, long long*);
-template void sort_groups<ListTag>(ContainerT<ListTag, Studentas>&, ContainerT<ListTag, Studentas>&, int, long long*);
-template void write_groups<VectorTag>(const ContainerT<VectorTag, Studentas>&, const ContainerT<VectorTag, Studentas>&, int, long long*);
-template void write_groups<ListTag>(const ContainerT<ListTag, Studentas>&, const ContainerT<ListTag, Studentas>&, int, long long*);
-template void split_groups_remove<VectorTag>(ContainerT<VectorTag, Studentas>&, ContainerT<VectorTag, Studentas>&, ContainerT<VectorTag, Studentas>&, int, long long*);
-template void split_groups_remove<ListTag>(ContainerT<ListTag, Studentas>&, ContainerT<ListTag, Studentas>&, ContainerT<ListTag, Studentas>&, int, long long*);
-template void split_groups_inplace<VectorTag>(ContainerT<VectorTag, Studentas>&, ContainerT<VectorTag, Studentas>&, ContainerT<VectorTag, Studentas>&, int, long long*);
-template void split_groups_inplace<ListTag>(ContainerT<ListTag, Studentas>&, ContainerT<ListTag, Studentas>&, ContainerT<ListTag, Studentas>&, int, long long*);
+template ContainerT<ListTag, Studentas> read_all<ListTag>(const std::string&, long long*);
+
+template void split_groups<VectorTag>(ContainerT<VectorTag, Studentas>&,
+    ContainerT<VectorTag, Studentas>&,
+    ContainerT<VectorTag, Studentas>&,
+    int, long long*);
+template void split_groups<ListTag>(ContainerT<ListTag, Studentas>&,
+    ContainerT<ListTag, Studentas>&,
+    ContainerT<ListTag, Studentas>&,
+    int, long long*);
+
+template void split_groups_remove<VectorTag>(ContainerT<VectorTag, Studentas>&,
+    ContainerT<VectorTag, Studentas>&,
+    ContainerT<VectorTag, Studentas>&,
+    int, long long*);
+template void split_groups_remove<ListTag>(ContainerT<ListTag, Studentas>&,
+    ContainerT<ListTag, Studentas>&,
+    ContainerT<ListTag, Studentas>&,
+    int, long long*);
+
+template void split_groups_inplace<VectorTag>(ContainerT<VectorTag, Studentas>&,
+    ContainerT<VectorTag, Studentas>&,
+    ContainerT<VectorTag, Studentas>&,
+    int, long long*);
+template void split_groups_inplace<ListTag>(ContainerT<ListTag, Studentas>&,
+    ContainerT<ListTag, Studentas>&,
+    ContainerT<ListTag, Studentas>&,
+    int, long long*);
+
+template void sort_groups<VectorTag>(
+    ContainerT<VectorTag, Studentas>&,
+    ContainerT<VectorTag, Studentas>&,
+    int, long long*);
+template void sort_groups<ListTag>(
+    ContainerT<ListTag, Studentas>&,
+    ContainerT<ListTag, Studentas>&,
+    int, long long*);
+
+template void write_groups<VectorTag>(
+    const ContainerT<VectorTag, Studentas>&,
+    const ContainerT<VectorTag, Studentas>&,
+    int, long long*);
+template void write_groups<ListTag>(
+    const ContainerT<ListTag, Studentas>&,
+    const ContainerT<ListTag, Studentas>&,
+    int, long long*);
