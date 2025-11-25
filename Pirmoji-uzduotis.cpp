@@ -7,7 +7,6 @@
 #include <algorithm>
 
 #include "v03_runner.hpp"
-#include "konteineriu_pasirinkimas.hpp"
 #include "generatorius.hpp"
 #include "bench_runner.hpp"
 

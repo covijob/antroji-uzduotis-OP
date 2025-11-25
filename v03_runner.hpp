@@ -1,6 +1,5 @@
 ﻿#pragma once
 #include <iostream>
-#include <type_traits>
 #include <string>
 #include "konteineriu_pasirinkimas.hpp"
 #include "v03_api.hpp"

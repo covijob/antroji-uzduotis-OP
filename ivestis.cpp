@@ -1,7 +1,6 @@
 ﻿#include "ivestis.hpp"
 #include <fstream>
 #include <sstream>
-#include <algorithm>
 #include <list>
 
 Studentas nuskaityti_studenta(const std::string& eilute) {

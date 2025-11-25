@@ -1,6 +1,5 @@
 #pragma once
 #include <ostream>
-#include <vector>
 #include <list>
 #include "studentai.hpp"
 

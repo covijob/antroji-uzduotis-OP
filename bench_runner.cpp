@@ -1,10 +1,8 @@
 #include <iostream>
 #include <filesystem>
 #include <vector>
-#include <algorithm>
 #include <string>
 
-#include "konteineriu_pasirinkimas.hpp"
 #include "v03_runner.hpp"
 #include "bench_runner.hpp"
 

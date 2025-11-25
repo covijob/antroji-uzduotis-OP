@@ -23,13 +23,14 @@ public:
         int egz)
         : v_(vardas), p_(pavarde), nd_(nd), egz_(egz) {
     }
-
+    //destruktorius 
     ~Studentas() = default;
-
+    //copy constructor
     Studentas(const Studentas& kitas)
         : v_(kitas.v_), p_(kitas.p_), nd_(kitas.nd_), egz_(kitas.egz_) {
     }
 
+    //copy asignment operatorius
     Studentas& operator=(const Studentas& kitas) {
         if (this != &kitas) {
             v_ = kitas.v_;
