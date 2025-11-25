@@ -42,7 +42,7 @@ public:
     }
 
     void spausdinti(std::ostream& os) const {
-        os << v_ << " " << p_ << " ";
+        os << p_ << " " << v_ << " ";
 
         for (int x : nd_) {
             os << x << " ";
@@ -57,16 +57,29 @@ public:
         nd_.clear();
         egz_ = 0;
 
-        if (!(is >> v_ >> p_)) return;
-
-        int x;
-        while (is >> x) {
-            nd_.push_back(x);
+        std::string pav, var;
+        if (!(is >> pav >> var)) {
+            return;
         }
 
-        if (!nd_.empty()) {
-            egz_ = nd_.back();
-            nd_.pop_back();
+        std::vector<int> nd_tmp;
+        int x;
+        while (is >> x) {
+            nd_tmp.push_back(x);
+        }
+
+        if (nd_tmp.empty()) {
+            v_ = var;
+            p_ = pav;
+            nd_.clear();
+            egz_ = 0;
+        }
+        else {
+            egz_ = nd_tmp.back();
+            nd_tmp.pop_back();
+            nd_ = nd_tmp;
+            v_ = var;
+            p_ = pav;
         }
 
         is.clear();
@@ -130,32 +143,13 @@ public:
         return 0.4 * nd_rez + 0.6 * egz_;
     }
 
-    
-
     friend std::ostream& operator<<(std::ostream& os, const Studentas& s) {
-        os << s.pavarde() << " " << s.vardas() << " ";
-        for (int x : s.nd_) os << x << " ";
-        os << s.egz_;
+        s.spausdinti(os);
         return os;
     }
 
-   
     friend std::istream& operator>>(std::istream& is, Studentas& s) {
-        std::string pav, var;
-        if (!(is >> pav >> var)) return is;
-
-        std::vector<int> nd;
-        int x;
-        while (is >> x) nd.push_back(x);
-
-        if (nd.empty()) {
-            s = Studentas(var, pav, {}, 0);
-        }
-        else {
-            int egz = nd.back();
-            nd.pop_back();
-            s = Studentas(var, pav, nd, egz);
-        }
+        s.nuskaityti(is);
         return is;
     }
 };
