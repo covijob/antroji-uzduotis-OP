@@ -22,7 +22,7 @@ Programa gali veikti:
 - **Benchmark režimu** (automatiniai testai visiems failams)
 
 
-### Sistemos informacija
+## Sistemos informacija
 - Procesorius: 12th gen Intel i7-12650H
 - Operatyvioji atmintis (RAM): 16GB
 - Diskas: SSD
@@ -31,26 +31,40 @@ Programa gali veikti:
 
 
 *exe failo dydis: 113Kb*
+
 ## Kalbos standartas
 
 C++20 Standart
 
+## v1.2 patch notes
+
+- Realizuota *Rule of three* pagal OOP principus bei realizuoti įvesties/išvesties operatoriai.
+- Grąžintas rankinis duomenų įvedimas bei galimybį išvesti rezultatus į konsolę.
+- Atliktas naujas bench_mark testas_
+
 ## Naudojimas
 
-FAILŲ GENERAVIMAS:
+# FAILŲ GENERAVIMAS:
 1. Paleisti programą.
 2. UI pasirinkti 'Įprastą režimą'
 3. Generuoti naujus failus.
 
-DARBAS SU FAILAIS:
+# DARBAS SU FAILAIS:
 1. Paleisti programą.
 2. Pasirinkti režimą:
    - **1** – normalus režimas
    - **2** – benchmark režimas
 3. Benchmark režimas automatiškai ištestuos visus įmanomus scenarijus, o 'normalus režimas' -> 'esamo failo naudojimas' leis dirbti su failais po vieną. 
 
+# RANKA ĮVEDAMI DUOMENYS
+1. Paleisti programą.
+2. Pasirinkti įvedimo ranka ražimą.
 
-### `partition_copy`
+*Papildomai galima visus rezultatus išvesti į konsolę*
+
+### UŽDUOTIES ĮYVENDINIMO STRATEGIJOS
+
+## `partition_copy` streategija 1
 
 `partition_copy` nekeičia originalaus konteinerio.
 
@@ -62,7 +76,7 @@ reikia papildomos atminties. Praktikoje ji labai greita su `std::vector`,
 nes rašo nuosekliai į du ištisinius masyvus.
 
 
-### `remove_if`
+## `remove_if` strateija 2
 
 `remove_if` modifikuoja originalų konteinerį.
 
@@ -74,7 +88,7 @@ Strategija taupi atminčiai, bet nepraktiška, kai reikia **abiejų**
 grupių. Dideliuose failuose dažnai veikia lėčiau nei kiti metodai.
 
 
-### `partition`
+## `partition` strategija 3
 
 `partition` taip pat keičia originalų konteinerį, tačiau nieko
 neištrina — tik pertvarko elementus.
@@ -88,11 +102,17 @@ ji ypač greita, nes perrišamos tik mazgų rodyklės, o ne kopijuojami
 duomenys.
 
 
-
 Visuose testuose fiksuojamas tik **bendras programos veikimo laikas (ms)**.
 
+### 1.2 Benchmark rezultatai:
 
-### STRUCT
+
+
+
+### v1.1  Rezultatai:
+
+
+## STRUCT
 
 # std::vector — Strategijų palyginimas
 
@@ -118,7 +138,7 @@ Visuose testuose fiksuojamas tik **bendras programos veikimo laikas (ms)**.
 | 1 000 K7   |     16   |     10       |     14 |
 
 
-#### CLASS 
+### CLASS 
 
 # std::vector — Strategijų palyginimas
 
@@ -146,16 +166,6 @@ Visuose testuose fiksuojamas tik **bendras programos veikimo laikas (ms)**.
 | 100        |       0        |      0             |      0 |
 
 
-# Naudojamos strategijos
-
-- **Strategija 1 — `partition_copy`**  
-  (kopijuojami elementai į du naujus konteinerius)
-
-- **Strategija 2 — `remove_if`**  
-  (pašalinami neatitinkantys elementai, likę perkeliami)
-
-- **Strategija 3 — `partition`*
- 
 
 
 
