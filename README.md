@@ -106,8 +106,31 @@ Visuose testuose fiksuojamas tik **bendras programos veikimo laikas (ms)**.
 
 ### 1.2 Benchmark rezultatai:
 
+## Rezultatai: std::vector
+
+| Failas                | Įrašų sk.  | Strategija 1 `partition_copy` (ms) | Strategija 2 `remove_if` (ms) | Strategija 3 `partition` (ms) |
+|-----------------------|-----------:|------------------------------------:|-------------------------------:|-------------------------------:|
+| studentai_100_K6      |        100 | 26                                 | 1                              | 0                              |
+| studentai_1000_K6     |      1 000 | 16                                 | 5                              | 9                              |
+| studentai_10000_K6    |     10 000 | 68                                 | 47                             | 52                             |
+| studentai_100000_K6   |    100 000 | 506                                | 481                            | 501                            |
+| studentai_1000000_K6  |  1 000 000 | 5531                               | 4957                           | 5178                           |
+| studentai_10000000_K6 | 10 000 000 | 54337                              | 52876                          | 55578                          |
 
 
+## Rezultatai: std::list
+
+| Failas                | Įrašų sk.  | Strategija 1 `partition_copy` (ms) | Strategija 2 `remove_if` (ms) | Strategija 3 `partition` (ms) |
+|-----------------------|-----------:|------------------------------------:|-------------------------------:|-------------------------------:|
+| studentai_100_K6      |        100 | 0                                  | 0                              | 1                              |
+| studentai_1000_K6     |      1 000 | 9                                  | 4                              | 17                             |
+| studentai_10000_K6    |     10 000 | 56                                 | 41                             | 59                             |
+| studentai_100000_K6   |    100 000 | 386                                | 399                            | 401                            |
+| studentai_1000000_K6  |  1 000 000 | 4051                               | 4672                           | 4114                           |
+| studentai_10000000_K6 | 10 000 000 | 42300                              | 41108                          | 43717                          |
+
+
+*vector rezultatai suprasteje, bet list paspartejo*
 
 ### v1.1  Rezultatai:
 
