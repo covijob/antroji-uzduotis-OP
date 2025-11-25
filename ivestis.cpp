@@ -6,20 +6,11 @@
 
 Studentas nuskaityti_studenta(const std::string& eilute) {
     std::istringstream in(eilute);
-    std::string pav, var;
-    in >> pav >> var;
-
-    std::vector<int> nd;
-    int x;
-    while (in >> x) nd.push_back(x);
-
-    if (nd.empty()) return Studentas(var, pav, {}, 0);
-
-    int egz = nd.back();
-    nd.pop_back();
-
-    return Studentas(var, pav, nd, egz);
+    Studentas s;
+    in >> s;
+    return s;
 }
+
 
 bool skaityti_is_failo(const std::string& failas, std::vector<Studentas>& grupe) {
     std::ifstream in(failas);
