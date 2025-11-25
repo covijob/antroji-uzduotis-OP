@@ -41,6 +41,38 @@ public:
         return *this;
     }
 
+    void spausdinti(std::ostream& os) const {
+        os << v_ << " " << p_ << " ";
+
+        for (int x : nd_) {
+            os << x << " ";
+        }
+
+        os << egz_;
+    }
+
+    void nuskaityti(std::istream& is) {
+        v_.clear();
+        p_.clear();
+        nd_.clear();
+        egz_ = 0;
+
+        if (!(is >> v_ >> p_)) return;
+
+        int x;
+        while (is >> x) {
+            nd_.push_back(x);
+        }
+
+        if (!nd_.empty()) {
+            egz_ = nd_.back();
+            nd_.pop_back();
+        }
+
+        is.clear();
+    }
+
+
     // Getteriai
     const std::string& vardas() const {
         return v_;
