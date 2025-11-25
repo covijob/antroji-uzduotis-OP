@@ -23,6 +23,9 @@ public:
         : v_(vardas), p_(pavarde), nd_(nd), egz_(egz) {
     }
 
+    ~Studentas() {
+    }
+
     const std::string& vardas() const {
         return v_;
     }
