@@ -3,6 +3,7 @@
 #include <string>
 #include <numeric>
 #include <algorithm>
+#include <iostream>
 
 class Studentas {
 private:
@@ -23,9 +24,23 @@ public:
         : v_(vardas), p_(pavarde), nd_(nd), egz_(egz) {
     }
 
-    ~Studentas() {
+    ~Studentas() = default;
+
+    Studentas(const Studentas& kitas)
+        : v_(kitas.v_), p_(kitas.p_), nd_(kitas.nd_), egz_(kitas.egz_) {
     }
 
+    Studentas& operator=(const Studentas& kitas) {
+        if (this != &kitas) {
+            v_ = kitas.v_;
+            p_ = kitas.p_;
+            nd_ = kitas.nd_;
+            egz_ = kitas.egz_;
+        }
+        return *this;
+    }
+
+    // Getteriai
     const std::string& vardas() const {
         return v_;
     }
@@ -50,22 +65,22 @@ public:
         p_ = pavarde;
     }
 
-    void nustatyti_nd(const std::vector<int>& nd) {
-        nd_ = nd;
-    }
-
-    void nustatyti_egz(int egz) {
-        egz_ = egz;
-    }
-
     void prideti_nd(int pazymys) {
         nd_.push_back(pazymys);
     }
 
+    void nustatyti_nd(const std::vector<int>& nd) {
+        nd_ = nd;
+    }
+
+    void nustatyti_egzamina(int egz) {
+        egz_ = egz;
+    }
+
     double vidurkis() const {
         if (nd_.empty()) return 0.0;
-        double sum = std::accumulate(nd_.begin(), nd_.end(), 0.0);
-        return sum / static_cast<double>(nd_.size());
+        double suma = std::accumulate(nd_.begin(), nd_.end(), 0.0);
+        return suma / nd_.size();
     }
 
     double mediana() const {
@@ -80,5 +95,34 @@ public:
     double galutinis(int method) const {
         double nd_rez = (method == 1) ? vidurkis() : mediana();
         return 0.4 * nd_rez + 0.6 * egz_;
+    }
+
+    
+
+    friend std::ostream& operator<<(std::ostream& os, const Studentas& s) {
+        os << s.pavarde() << " " << s.vardas() << " ";
+        for (int x : s.nd_) os << x << " ";
+        os << s.egz_;
+        return os;
+    }
+
+   
+    friend std::istream& operator>>(std::istream& is, Studentas& s) {
+        std::string pav, var;
+        if (!(is >> pav >> var)) return is;
+
+        std::vector<int> nd;
+        int x;
+        while (is >> x) nd.push_back(x);
+
+        if (nd.empty()) {
+            s = Studentas(var, pav, {}, 0);
+        }
+        else {
+            int egz = nd.back();
+            nd.pop_back();
+            s = Studentas(var, pav, nd, egz);
+        }
+        return is;
     }
 };
