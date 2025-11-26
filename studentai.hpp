@@ -5,44 +5,44 @@
 #include <algorithm>
 #include <iostream>
 
-class Studentas {
+#include "zmogus.hpp"
+
+class Studentas : public Zmogus {
 private:
-    std::string v_;
-    std::string p_;
     std::vector<int> nd_;
     int egz_;
 
 public:
     Studentas()
-        : v_(), p_(), nd_(), egz_(0) {
+        : Zmogus(), nd_(), egz_(0) {
     }
 
     Studentas(const std::string& vardas,
         const std::string& pavarde,
         const std::vector<int>& nd,
         int egz)
-        : v_(vardas), p_(pavarde), nd_(nd), egz_(egz) {
+        : Zmogus(vardas, pavarde), nd_(nd), egz_(egz) {
     }
     //destruktorius 
     ~Studentas() = default;
     //copy constructor
     Studentas(const Studentas& kitas)
-        : v_(kitas.v_), p_(kitas.p_), nd_(kitas.nd_), egz_(kitas.egz_) {
+        : Zmogus(kitas), nd_(kitas.nd_), egz_(kitas.egz_) {
     }
 
     //copy asignment operatorius
     Studentas& operator=(const Studentas& kitas) {
         if (this != &kitas) {
-            v_ = kitas.v_;
-            p_ = kitas.p_;
+            Zmogus::operator=(kitas);
             nd_ = kitas.nd_;
             egz_ = kitas.egz_;
         }
         return *this;
     }
 
-    void spausdinti(std::ostream& os) const {
-        os << p_ << " " << v_ << " ";
+
+    void spausdinti(std::ostream& os) const override{
+        os << pavarde << " " << vardas << " ";
 
         for (int x : nd_) {
             os << x << " ";
@@ -78,6 +78,7 @@ public:
             egz_ = nd_tmp.back();
             nd_tmp.pop_back();
             nd_ = nd_tmp;
+
             v_ = var;
             p_ = pav;
         }
@@ -87,13 +88,6 @@ public:
 
 
     // Getteriai
-    const std::string& vardas() const {
-        return v_;
-    }
-
-    const std::string& pavarde() const {
-        return p_;
-    }
 
     const std::vector<int>& nd() const {
         return nd_;
@@ -103,13 +97,6 @@ public:
         return egz_;
     }
 
-    void nustatyti_varda(const std::string& vardas) {
-        v_ = vardas;
-    }
-
-    void nustatyti_pavarde(const std::string& pavarde) {
-        p_ = pavarde;
-    }
 
     void prideti_nd(int pazymys) {
         nd_.push_back(pazymys);
