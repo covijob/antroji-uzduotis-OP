@@ -27,9 +27,6 @@
     <ClCompile Include="skaiciavimas.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="streaming.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="v03_api.hpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -40,6 +37,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Pirmoji-uzduotis.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bench_runner.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -67,20 +67,14 @@
     <ClInclude Include="studentai.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="streaming.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="konteineriu_pasirinkimas.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="kietiakiai.txt" />
-    <Text Include="rezultatas.txt" />
-    <Text Include="studentai_gen.txt" />
-    <Text Include="studentai_v1.txt" />
-    <Text Include="studentai_v1_test.txt" />
-    <Text Include="studentai1.txt" />
-    <Text Include="vargsiukai.txt" />
+    <ClInclude Include="bench_runner.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="zmogus.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
