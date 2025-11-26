@@ -23,26 +23,25 @@ public:
         int egz)
         : Zmogus(vardas, pavarde), nd_(nd), egz_(egz) {
     }
-    //destruktorius 
+
     ~Studentas() = default;
-    //copy constructor
+
     Studentas(const Studentas& kitas)
         : Zmogus(kitas), nd_(kitas.nd_), egz_(kitas.egz_) {
     }
 
-    //copy asignment operatorius
     Studentas& operator=(const Studentas& kitas) {
         if (this != &kitas) {
-            Zmogus::operator=(kitas);
+            v_ = kitas.v_;
+            p_ = kitas.p_;
             nd_ = kitas.nd_;
             egz_ = kitas.egz_;
         }
         return *this;
     }
 
-
-    void spausdinti(std::ostream& os) const override{
-        os << pavarde << " " << vardas << " ";
+    void spausdinti(std::ostream& os) const override {
+        os << pavarde() << " " << vardas() << " ";
 
         for (int x : nd_) {
             os << x << " ";
@@ -69,8 +68,8 @@ public:
         }
 
         if (nd_tmp.empty()) {
-            v_ = var;
             p_ = pav;
+            v_ = var;
             nd_.clear();
             egz_ = 0;
         }
@@ -78,16 +77,12 @@ public:
             egz_ = nd_tmp.back();
             nd_tmp.pop_back();
             nd_ = nd_tmp;
-
-            v_ = var;
             p_ = pav;
+            v_ = var;
         }
 
         is.clear();
     }
-
-
-    // Getteriai
 
     const std::vector<int>& nd() const {
         return nd_;
@@ -96,7 +91,6 @@ public:
     int egzaminas() const {
         return egz_;
     }
-
 
     void prideti_nd(int pazymys) {
         nd_.push_back(pazymys);
