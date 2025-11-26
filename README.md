@@ -36,6 +36,46 @@ Programa gali veikti:
 
 C++20 Standart
 
+## 1.5 patch notes
+
+- Sukurta bazinė abstrakti klasė Zmogus, aprašanti bendrus žmogaus duomenis (vardą ir pavardę).
+- Zmogus turi gryną virtualų metodą, todėl negalima sukurti jo objekto.
+- Klasė Studentas dabar paveldi iš Zmogus ir įgyvendina paveldėtą spausdinti() metodą.
+- Visa skaičiavimo, rikiavimo, failų skaitymo ir išvedimo logika nepakito – programa veikia taip pat kaip ankstesnė v1.2 versija.
+- Kodas sutvarkytas taip, kad studentų duomenų apdorojimas remiasi OOP paveldėjimu, o struktūra tapo aiškesnė ir lengviau plečiama.
+- Atnaujinti susiję moduliai (ivestis, formatas, skaiciavimas, v03_api), kad dirbtų su paveldėjimu ir nauju api.
+- patikrinta, ar programa išlaiko identišką v1.2 veikimą su tais pačiais failais, ar tinkamai išveda rezultatus.
+
+*Zmogus.hpp* struktūra:
+
+
+class Zmogus {
+protected:
+    std::string v_;
+    std::string p_;
+
+public:
+    Zmogus() = default;
+
+    Zmogus(const std::string& vardas, const std::string& pavarde)
+        : v_(vardas), p_(pavarde) {
+    }
+
+    virtual ~Zmogus() = default;
+
+    const std::string& vardas() const {
+        return v_;
+    }
+
+    const std::string& pavarde() const {
+        return p_;
+    }
+
+    virtual void spausdinti(std::ostream& os) const = 0;
+};
+
+
+
 ## v1.2 patch notes
 
 - Realizuota *Rule of three* pagal OOP principus bei realizuoti įvesties/išvesties operatoriai.
