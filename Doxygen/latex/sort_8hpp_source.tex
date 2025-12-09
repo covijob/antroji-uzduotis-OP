@@ -1,0 +1,18 @@
+\doxysection{sort.\+hpp}
+\hypertarget{sort_8hpp_source}{}\label{sort_8hpp_source}\index{C:/Users/mangi/source/repos/Pirmoji-\/uzduotis/sort.hpp@{C:/Users/mangi/source/repos/Pirmoji-\/uzduotis/sort.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#include\ "{}studentai.hpp"{}}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ less\_pavarde\_vardas(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_studentas}{Studentas}}\&\ a,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{class_studentas}{Studentas}}\&\ b)\ \{}
+\DoxyCodeLine{00005\ \ \ \ \ \textcolor{keywordflow}{if}\ (a.pavarde()\ !=\ b.pavarde())\ \textcolor{keywordflow}{return}\ a.pavarde()\ <\ b.pavarde();}
+\DoxyCodeLine{00006\ \ \ \ \ \textcolor{keywordflow}{return}\ a.vardas()\ <\ b.vardas();}
+\DoxyCodeLine{00007\ \}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ less\_vardas\_pavarde(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_studentas}{Studentas}}\&\ a,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{class_studentas}{Studentas}}\&\ b)\ \{}
+\DoxyCodeLine{00010\ \ \ \ \ \textcolor{keywordflow}{if}\ (a.vardas()\ !=\ b.vardas())\ \textcolor{keywordflow}{return}\ a.vardas()\ <\ b.vardas();}
+\DoxyCodeLine{00011\ \ \ \ \ \textcolor{keywordflow}{return}\ a.pavarde()\ <\ b.pavarde();}
+\DoxyCodeLine{00012\ \}}
+
+\end{DoxyCode}

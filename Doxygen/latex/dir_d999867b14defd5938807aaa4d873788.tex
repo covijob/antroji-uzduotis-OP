@@ -1,0 +1,297 @@
+\doxysection{C\+:/\+Users/mangi/source/repos/\+Pirmoji-\/uzduotis Directory Reference}
+\hypertarget{dir_d999867b14defd5938807aaa4d873788}{}\label{dir_d999867b14defd5938807aaa4d873788}\index{C:/Users/mangi/source/repos/Pirmoji-\/uzduotis Directory Reference@{C:/Users/mangi/source/repos/Pirmoji-\/uzduotis Directory Reference}}
+\doxysubsubsection*{Files}
+\begin{DoxyCompactItemize}
+\item 
+file {\bfseries bench\+\_\+runner.\+hpp}
+\item 
+file {\bfseries formatas.\+hpp}
+\item 
+file {\bfseries generatorius.\+hpp}
+\item 
+file {\bfseries ivestis.\+hpp}
+\item 
+file {\bfseries konteineriu\+\_\+pasirinkimas.\+hpp}
+\item 
+file {\bfseries skaiciavimas.\+hpp}
+\item 
+file {\bfseries sort.\+hpp}
+\item 
+file {\bfseries studentai.\+hpp}
+\item 
+file {\bfseries v03\+\_\+api.\+hpp}
+\item 
+file {\bfseries v03\+\_\+runner.\+hpp}
+\item 
+file {\bfseries zmogus.\+hpp}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\hypertarget{dir_d999867b14defd5938807aaa4d873788_autotoc_md0}{}\doxysubsection{\texorpdfstring{Projekto paskirtis}{Projekto paskirtis}}\label{dir_d999867b14defd5938807aaa4d873788_autotoc_md0}
+Ši programa skirta apdoroti didelius studentų įrašų kiekius ir suskirstyti juos į dvi kategorijas\+:
+
+
+\begin{DoxyItemize}
+\item Vargšiukai\+: studentai, kurių galutinis balas \texorpdfstring{$<$}{<} 5 ~\newline
+
+\item Kietiakiai\+: studentai, kurių galutinis balas ≥ 5 ~\newline
+
+\end{DoxyItemize}
+
+Naudojami du skirtingi konteineriai\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily std\+::vector\texorpdfstring{$<$}{<}\doxylink{class_studentas}{Studentas}\texorpdfstring{$>$}{>}}
+\item {\ttfamily std\+::list\texorpdfstring{$<$}{<}\doxylink{class_studentas}{Studentas}\texorpdfstring{$>$}{>}}
+\end{DoxyItemize}
+
+Trys skaidymo strategijos\+:
+
+
+\begin{DoxyEnumerate}
+\item {\ttfamily partition\+\_\+copy}
+\item {\ttfamily remove\+\_\+if}
+\item {\ttfamily partition}
+\end{DoxyEnumerate}
+
+Programa gali veikti\+:
+
+
+\begin{DoxyItemize}
+\item {\bfseries{Interaktyviu režimu}}
+\item {\bfseries{Benchmark režimu}} (automatiniai testai visiems failams)
+\end{DoxyItemize}\hypertarget{dir_d999867b14defd5938807aaa4d873788_autotoc_md1}{}\doxysubsection{\texorpdfstring{Sistemos informacija}{Sistemos informacija}}\label{dir_d999867b14defd5938807aaa4d873788_autotoc_md1}
+
+\begin{DoxyItemize}
+\item Procesorius\+: 12th gen Intel i7-\/12650H
+\item Operatyvioji atmintis (RAM)\+: 16GB
+\item Diskas\+: SSD
+\item Operacinė sistema\+: Windows 11, 64-\/bit {\itshape Nuadojama Visual Studio 2022}
+\end{DoxyItemize}
+
+{\itshape exe failo dydis\+: 113Kb}\hypertarget{dir_d999867b14defd5938807aaa4d873788_autotoc_md2}{}\doxysubsection{\texorpdfstring{Kalbos standartas}{Kalbos standartas}}\label{dir_d999867b14defd5938807aaa4d873788_autotoc_md2}
+C++20 Standart\hypertarget{dir_d999867b14defd5938807aaa4d873788_autotoc_md3}{}\doxysubsection{\texorpdfstring{1.\+5 patch notes}{1.\+5 patch notes}}\label{dir_d999867b14defd5938807aaa4d873788_autotoc_md3}
+
+\begin{DoxyItemize}
+\item Sukurta bazinė abstrakti klasė \doxylink{class_zmogus}{Zmogus}, aprašanti bendrus žmogaus duomenis (vardą ir pavardę).
+\item \doxylink{class_zmogus}{Zmogus} turi gryną virtualų metodą, todėl negalima sukurti jo objekto.
+\item Klasė \doxylink{class_studentas}{Studentas} dabar paveldi iš \doxylink{class_zmogus}{Zmogus} ir įgyvendina paveldėtą spausdinti() metodą.
+\item Visa skaičiavimo, rikiavimo, failų skaitymo ir išvedimo logika nepakito – programa veikia taip pat kaip ankstesnė v1.\+2 versija.
+\item Kodas sutvarkytas taip, kad studentų duomenų apdorojimas remiasi OOP paveldėjimu, o struktūra tapo aiškesnė ir lengviau plečiama.
+\item Atnaujinti susiję moduliai (ivestis, formatas, skaiciavimas, v03\+\_\+api), kad dirbtų su paveldėjimu ir nauju api.
+\item patikrinta, ar programa išlaiko identišką v1.\+2 veikimą su tais pačiais failais, ar tinkamai išveda rezultatus.
+\end{DoxyItemize}
+
+{\itshape \doxylink{zmogus_8hpp_source}{Zmogus.\+hpp}} struktūra\+:
+
+class \doxylink{class_zmogus}{Zmogus} \{ protected\+: std\+::string v\+\_\+; std\+::string p\+\_\+;
+
+public\+: \doxylink{class_zmogus}{Zmogus()} = default;
+
+\doxylink{class_zmogus}{Zmogus(const std\+::string\& vardas, const std\+::string\& pavarde)} \+: v\+\_\+(vardas), p\+\_\+(pavarde) \{ \}
+
+virtual \texorpdfstring{$\sim$}{\string~}\+Zmogus() = default;
+
+const std\+::string\& vardas() const \{ return v\+\_\+; \}
+
+const std\+::string\& pavarde() const \{ return p\+\_\+; \}
+
+virtual void spausdinti(std\+::ostream\& os) const = 0; \};\hypertarget{dir_d999867b14defd5938807aaa4d873788_autotoc_md4}{}\doxysubsection{\texorpdfstring{v1.\+2 patch notes}{v1.\+2 patch notes}}\label{dir_d999867b14defd5938807aaa4d873788_autotoc_md4}
+
+\begin{DoxyItemize}
+\item Realizuota {\itshape Rule of three} pagal OOP principus bei realizuoti įvesties/išvesties operatoriai.
+\item Grąžintas rankinis duomenų įvedimas bei galimybį išvesti rezultatus į konsolę.
+\item Atliktas naujas bench\+\_\+mark testas\+\_\+
+\end{DoxyItemize}\hypertarget{dir_d999867b14defd5938807aaa4d873788_autotoc_md5}{}\doxysubsection{\texorpdfstring{Naudojimas}{Naudojimas}}\label{dir_d999867b14defd5938807aaa4d873788_autotoc_md5}
+\hypertarget{dir_d999867b14defd5938807aaa4d873788_autotoc_md6}{}\doxysubsection{\texorpdfstring{FAILŲ GENERAVIMAS\+:}{FAILŲ GENERAVIMAS\+:}}\label{dir_d999867b14defd5938807aaa4d873788_autotoc_md6}
+
+\begin{DoxyEnumerate}
+\item Paleisti programą.
+\item UI pasirinkti \textquotesingle{}Įprastą režimą\textquotesingle{}
+\item Generuoti naujus failus.
+\end{DoxyEnumerate}\hypertarget{dir_d999867b14defd5938807aaa4d873788_autotoc_md7}{}\doxysubsection{\texorpdfstring{DARBAS SU FAILAIS\+:}{DARBAS SU FAILAIS\+:}}\label{dir_d999867b14defd5938807aaa4d873788_autotoc_md7}
+
+\begin{DoxyEnumerate}
+\item Paleisti programą.
+\item Pasirinkti režimą\+:
+\begin{DoxyItemize}
+\item {\bfseries{1}} – normalus režimas
+\item {\bfseries{2}} – benchmark režimas
+\end{DoxyItemize}
+\item Benchmark režimas automatiškai ištestuos visus įmanomus scenarijus, o \textquotesingle{}normalus režimas\textquotesingle{} -\/\texorpdfstring{$>$}{>} \textquotesingle{}esamo failo naudojimas\textquotesingle{} leis dirbti su failais po vieną.
+\end{DoxyEnumerate}\hypertarget{dir_d999867b14defd5938807aaa4d873788_autotoc_md8}{}\doxysubsection{\texorpdfstring{RANKA Į\+VEDAMI DUOMENYS}{RANKA Į\+VEDAMI DUOMENYS}}\label{dir_d999867b14defd5938807aaa4d873788_autotoc_md8}
+
+\begin{DoxyEnumerate}
+\item Paleisti programą.
+\item Pasirinkti įvedimo ranka ražimą.
+\end{DoxyEnumerate}
+
+{\itshape Papildomai galima visus rezultatus išvesti į konsolę}\hypertarget{dir_d999867b14defd5938807aaa4d873788_autotoc_md9}{}\doxysubsubsubsection{\texorpdfstring{UŽ\+DUOTIES Į\+YVENDINIMO STRATEGIJOS}{UŽ\+DUOTIES Į\+YVENDINIMO STRATEGIJOS}}\label{dir_d999867b14defd5938807aaa4d873788_autotoc_md9}
+\hypertarget{dir_d999867b14defd5938807aaa4d873788_autotoc_md10}{}\doxysubsubsection{\texorpdfstring{{\ttfamily partition\+\_\+copy} streategija 1}{{\ttfamily partition\+\_\+copy} streategija 1}}\label{dir_d999867b14defd5938807aaa4d873788_autotoc_md10}
+{\ttfamily partition\+\_\+copy} nekeičia originalaus konteinerio.
+
+Ji pereina per visus elementus ir kiekvieną nukopijuoja į vieną iš dviejų naujų konteinerių — {\bfseries{vargšiukus}} ir {\bfseries{kietiakius}}.
+
+Tai saugus metodas, nes originalūs duomenys lieka nepakitę, tačiau strategijai reikia papildomos atminties. Praktikoje ji labai greita su {\ttfamily std\+::vector}, nes rašo nuosekliai į du ištisinius masyvus.\hypertarget{dir_d999867b14defd5938807aaa4d873788_autotoc_md11}{}\doxysubsubsection{\texorpdfstring{{\ttfamily remove\+\_\+if} strateija 2}{{\ttfamily remove\+\_\+if} strateija 2}}\label{dir_d999867b14defd5938807aaa4d873788_autotoc_md11}
+{\ttfamily remove\+\_\+if} modifikuoja originalų konteinerį.
+
+Ji pašalina visus elementus, kurie neturi likti, ir palieka tik vieną grupę. Šis metodas iš esmės nėra tikras skaidymas į dvi dalis — jis tiesiog “išmeta” vieną iš kategorijų.
+
+\doxylink{struct_strategija}{Strategija} taupi atminčiai, bet nepraktiška, kai reikia {\bfseries{abiejų}} grupių. Dideliuose failuose dažnai veikia lėčiau nei kiti metodai.\hypertarget{dir_d999867b14defd5938807aaa4d873788_autotoc_md12}{}\doxysubsubsection{\texorpdfstring{{\ttfamily partition} strategija 3}{{\ttfamily partition} strategija 3}}\label{dir_d999867b14defd5938807aaa4d873788_autotoc_md12}
+{\ttfamily partition} taip pat keičia originalų konteinerį, tačiau nieko neištrina — tik pertvarko elementus.
+
+Po operacijos konteineryje pirmoje pusėje atsiduria visi elementai, tenkinantys predikatą, antroje — visi kiti. Ribos iteratorius leidžia šį vieną konteinerį logiškai padalinti į dvi dalis.
+
+Šiai strategijai beveik nereikia papildomos atminties. Su {\ttfamily std\+::list} ji ypač greita, nes perrišamos tik mazgų rodyklės, o ne kopijuojami duomenys.
+
+Visuose testuose fiksuojamas tik {\bfseries{bendras programos veikimo laikas (ms)}}.\hypertarget{dir_d999867b14defd5938807aaa4d873788_autotoc_md13}{}\doxysubsubsubsection{\texorpdfstring{1.\+2 Benchmark rezultatai\+:}{1.\+2 Benchmark rezultatai\+:}}\label{dir_d999867b14defd5938807aaa4d873788_autotoc_md13}
+\hypertarget{dir_d999867b14defd5938807aaa4d873788_autotoc_md14}{}\doxysubsubsection{\texorpdfstring{Rezultatai\+: std\+::vector}{Rezultatai\+: std\+::vector}}\label{dir_d999867b14defd5938807aaa4d873788_autotoc_md14}
+
+\begin{DoxyTable}{5}{}{}{1}
+\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Failas  &\SetCell{r,bg=\tableheadbgcolor,font=\bfseries}Įrašų sk.  &\SetCell{r,bg=\tableheadbgcolor,font=\bfseries}\doxylink{struct_strategija}{Strategija} 1 {\ttfamily partition\+\_\+copy} (ms)  &\SetCell{r,bg=\tableheadbgcolor,font=\bfseries}\doxylink{struct_strategija}{Strategija} 2 {\ttfamily remove\+\_\+if} (ms)  &\SetCell{r,bg=\tableheadbgcolor,font=\bfseries}\doxylink{struct_strategija}{Strategija} 3 {\ttfamily partition} (ms)  \\
+studentai\+\_\+100\+\_\+\+K6  &\SetCell{r}100  &\SetCell{r}26  &\SetCell{r}1  &\SetCell{r}0  \\
+studentai\+\_\+1000\+\_\+\+K6  &\SetCell{r}1 000  &\SetCell{r}16  &\SetCell{r}5  &\SetCell{r}9  \\
+studentai\+\_\+10000\+\_\+\+K6  &\SetCell{r}10 000  &\SetCell{r}68  &\SetCell{r}47  &\SetCell{r}52  \\
+studentai\+\_\+100000\+\_\+\+K6  &\SetCell{r}100 000  &\SetCell{r}506  &\SetCell{r}481  &\SetCell{r}501  \\
+studentai\+\_\+1000000\+\_\+\+K6  &\SetCell{r}1 000 000  &\SetCell{r}5531  &\SetCell{r}4957  &\SetCell{r}5178  \\
+studentai\+\_\+10000000\+\_\+\+K6  &\SetCell{r}10 000 000  &\SetCell{r}54337  &\SetCell{r}52876  &\SetCell{r}55578  \\
+\end{DoxyTable}
+\hypertarget{dir_d999867b14defd5938807aaa4d873788_autotoc_md15}{}\doxysubsubsection{\texorpdfstring{Rezultatai\+: std\+::list}{Rezultatai\+: std\+::list}}\label{dir_d999867b14defd5938807aaa4d873788_autotoc_md15}
+
+\begin{DoxyTable}{5}{}{}{1}
+\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Failas  &\SetCell{r,bg=\tableheadbgcolor,font=\bfseries}Įrašų sk.  &\SetCell{r,bg=\tableheadbgcolor,font=\bfseries}\doxylink{struct_strategija}{Strategija} 1 {\ttfamily partition\+\_\+copy} (ms)  &\SetCell{r,bg=\tableheadbgcolor,font=\bfseries}\doxylink{struct_strategija}{Strategija} 2 {\ttfamily remove\+\_\+if} (ms)  &\SetCell{r,bg=\tableheadbgcolor,font=\bfseries}\doxylink{struct_strategija}{Strategija} 3 {\ttfamily partition} (ms)  \\
+studentai\+\_\+100\+\_\+\+K6  &\SetCell{r}100  &\SetCell{r}0  &\SetCell{r}0  &\SetCell{r}1  \\
+studentai\+\_\+1000\+\_\+\+K6  &\SetCell{r}1 000  &\SetCell{r}9  &\SetCell{r}4  &\SetCell{r}17  \\
+studentai\+\_\+10000\+\_\+\+K6  &\SetCell{r}10 000  &\SetCell{r}56  &\SetCell{r}41  &\SetCell{r}59  \\
+studentai\+\_\+100000\+\_\+\+K6  &\SetCell{r}100 000  &\SetCell{r}386  &\SetCell{r}399  &\SetCell{r}401  \\
+studentai\+\_\+1000000\+\_\+\+K6  &\SetCell{r}1 000 000  &\SetCell{r}4051  &\SetCell{r}4672  &\SetCell{r}4114  \\
+studentai\+\_\+10000000\+\_\+\+K6  &\SetCell{r}10 000 000  &\SetCell{r}42300  &\SetCell{r}41108  &\SetCell{r}43717  \\
+\end{DoxyTable}
+
+
+{\itshape vector rezultatai suprasteje, bet list paspartejo}\hypertarget{dir_d999867b14defd5938807aaa4d873788_autotoc_md16}{}\doxysubsubsubsection{\texorpdfstring{v1.\+1 Rezultatai\+:}{v1.\+1 Rezultatai\+:}}\label{dir_d999867b14defd5938807aaa4d873788_autotoc_md16}
+\hypertarget{dir_d999867b14defd5938807aaa4d873788_autotoc_md17}{}\doxysubsubsection{\texorpdfstring{STRUCT}{STRUCT}}\label{dir_d999867b14defd5938807aaa4d873788_autotoc_md17}
+\hypertarget{dir_d999867b14defd5938807aaa4d873788_autotoc_md18}{}\doxysubsection{\texorpdfstring{std\+::vector — Strategijų palyginimas}{std\+::vector — Strategijų palyginimas}}\label{dir_d999867b14defd5938807aaa4d873788_autotoc_md18}
+
+\begin{DoxyTable}{4}{}{}{1}
+\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Failas  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Strat 1 (ms)  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Strat 2 (ms)  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Strat 3 (ms)  \\
+10 000 000  &46 606  &53 738  &51 970  \\
+1 000 000  &4 465  &5 340  &5 540  \\
+100 000  &552  &781  &574  \\
+10 000  &67  &53  &44  \\
+1 000 K6  &25  &10  &18  \\
+1 000 K7  &20  &11  &17  \\
+\end{DoxyTable}
+\hypertarget{dir_d999867b14defd5938807aaa4d873788_autotoc_md19}{}\doxysubsection{\texorpdfstring{std\+::list — Strategijų palyginimas}{std\+::list — Strategijų palyginimas}}\label{dir_d999867b14defd5938807aaa4d873788_autotoc_md19}
+
+\begin{DoxyTable}{4}{}{}{1}
+\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Failas  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Strat 1 (ms)  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Strat 2 (ms)  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Strat 3 (ms)  \\
+10 000 000  &50 180  &53 145  &49 747  \\
+1 000 000  &5 503  &5 289  &4 892  \\
+100 000  &501  &518  &521  \\
+10 000  &51  &59  &51  \\
+1 000 K6  &16  &10  &19  \\
+1 000 K7  &16  &10  &14  \\
+\end{DoxyTable}
+\hypertarget{dir_d999867b14defd5938807aaa4d873788_autotoc_md20}{}\doxysubsubsubsection{\texorpdfstring{CLASS}{CLASS}}\label{dir_d999867b14defd5938807aaa4d873788_autotoc_md20}
+\hypertarget{dir_d999867b14defd5938807aaa4d873788_autotoc_md21}{}\doxysubsection{\texorpdfstring{std\+::vector — Strategijų palyginimas}{std\+::vector — Strategijų palyginimas}}\label{dir_d999867b14defd5938807aaa4d873788_autotoc_md21}
+
+\begin{DoxyTable}{4}{}{}{1}
+\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Failas  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}\doxylink{struct_strategija}{Strategija} 1 (ms)  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}\doxylink{struct_strategija}{Strategija} 2 (ms)  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}\doxylink{struct_strategija}{Strategija} 3 (ms)  \\
+10 000 000  &51 361  &54 228  &61 690  \\
+1 000 000  &5 289  &5 269  &5 185  \\
+100 000  &603  &493  &536  \\
+10 000  &55  &58  &57  \\
+1 000 K6  &30  &14  &10  \\
+1 000 K7  &9  &9  &8  \\
+\end{DoxyTable}
+\texorpdfstring{$\vert$}{|} 100 \texorpdfstring{$\vert$}{|} 13 \texorpdfstring{$\vert$}{|} 11\texorpdfstring{$\vert$}{|} 0 \texorpdfstring{$\vert$}{|} 0\hypertarget{dir_d999867b14defd5938807aaa4d873788_autotoc_md22}{}\doxysubsection{\texorpdfstring{std\+::list — Strategijų palyginimas}{std\+::list — Strategijų palyginimas}}\label{dir_d999867b14defd5938807aaa4d873788_autotoc_md22}
+
+\begin{DoxyTable}{4}{}{}{1}
+\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Failas  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}\doxylink{struct_strategija}{Strategija} 1 (ms)  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}\doxylink{struct_strategija}{Strategija} 2 (ms)  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}\doxylink{struct_strategija}{Strategija} 3 (ms)  \\
+10 000 000  &105 541  &91 570  &47 549  \\
+1 000 000  &4 696  &4 714  &4 757  \\
+100 000  &470  &462  &462  \\
+10 000  &61  &57  &54  \\
+1 000 K6  &10  &13  &14  \\
+1 000 K7  &13  &7  &16  \\
+100  &0  &0  &0  \\
+\end{DoxyTable}
+\hypertarget{dir_d999867b14defd5938807aaa4d873788_autotoc_md23}{}\doxysubsubsubsection{\texorpdfstring{SKIRTINGŲ OPTIMIZACIJU REZULTATAI}{SKIRTINGŲ OPTIMIZACIJU REZULTATAI}}\label{dir_d999867b14defd5938807aaa4d873788_autotoc_md23}
+\hypertarget{dir_d999867b14defd5938807aaa4d873788_autotoc_md24}{}\doxysubsubsection{\texorpdfstring{O1 optimizacijos rezultatai (/\+O1)}{O1 optimizacijos rezultatai (/\+O1)}}\label{dir_d999867b14defd5938807aaa4d873788_autotoc_md24}
+\hypertarget{dir_d999867b14defd5938807aaa4d873788_autotoc_md25}{}\doxysubsubsubsection{\texorpdfstring{std\+::vector}{std\+::vector}}\label{dir_d999867b14defd5938807aaa4d873788_autotoc_md25}
+
+\begin{DoxyTable}{4}{}{}{1}
+\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Failas  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}\doxylink{struct_strategija}{Strategija} 1  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}\doxylink{struct_strategija}{Strategija} 2  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}\doxylink{struct_strategija}{Strategija} 3  \\
+10 000 000 K6  &54929  &50345  &50164  \\
+1 000 000 K6  &345901  &3591  &6400  \\
+100 000 K6  &1034  &1156  &1246  \\
+10 000 K6  &104  &109  &121  \\
+1 000 K6  &13  &15  &15  \\
+1 000 K7  &14  &11  &10  \\
+100 K6  &6  &2  &1  \\
+\end{DoxyTable}
+\hypertarget{dir_d999867b14defd5938807aaa4d873788_autotoc_md26}{}\doxysubsubsubsection{\texorpdfstring{std\+::list}{std\+::list}}\label{dir_d999867b14defd5938807aaa4d873788_autotoc_md26}
+
+\begin{DoxyTable}{4}{}{}{1}
+\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Failas  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}\doxylink{struct_strategija}{Strategija} 1  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}\doxylink{struct_strategija}{Strategija} 2  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}\doxylink{struct_strategija}{Strategija} 3  \\
+10 000 000 K6  &45781  &42867  &46698  \\
+1 000 000 K6  &12848  &13916  &13781  \\
+100 000 K6  &1117  &883  &889  \\
+10 000 K6  &101  &118  &106  \\
+1 000 K6  &21  &12  &15  \\
+1 000 K7  &14  &10  &14  \\
+100 K6  &1  &2  &2  \\
+\end{DoxyTable}
+\hypertarget{dir_d999867b14defd5938807aaa4d873788_autotoc_md27}{}\doxysubsubsection{\texorpdfstring{O2 optimizacijos rezultatai (/\+O2)}{O2 optimizacijos rezultatai (/\+O2)}}\label{dir_d999867b14defd5938807aaa4d873788_autotoc_md27}
+\hypertarget{dir_d999867b14defd5938807aaa4d873788_autotoc_md28}{}\doxysubsubsubsection{\texorpdfstring{std\+::vector}{std\+::vector}}\label{dir_d999867b14defd5938807aaa4d873788_autotoc_md28}
+
+\begin{DoxyTable}{4}{}{}{1}
+\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Failas  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}\doxylink{struct_strategija}{Strategija} 1  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}\doxylink{struct_strategija}{Strategija} 2  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}\doxylink{struct_strategija}{Strategija} 3  \\
+10 000 000 K6  &57197  &57150  &49950  \\
+1 000 000 K6  &8973  &4759  &4912  \\
+100 000 K6  &479  &475  &500  \\
+10 000 K6  &55  &50  &50  \\
+1 000 K6  &7  &10  &12  \\
+1 000 K7  &14  &14  &8  \\
+100 K6  &14  &13  &0  \\
+\end{DoxyTable}
+\hypertarget{dir_d999867b14defd5938807aaa4d873788_autotoc_md29}{}\doxysubsubsubsection{\texorpdfstring{std\+::list}{std\+::list}}\label{dir_d999867b14defd5938807aaa4d873788_autotoc_md29}
+
+\begin{DoxyTable}{4}{}{}{1}
+\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Failas  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}\doxylink{struct_strategija}{Strategija} 1  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}\doxylink{struct_strategija}{Strategija} 2  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}\doxylink{struct_strategija}{Strategija} 3  \\
+10 000 000 K6  &45683  &43222  &81995  \\
+1 000 000 K6  &4469  &4334  &4640  \\
+100 000 K6  &444  &428  &449  \\
+10 000 K6  &53  &53  &53  \\
+1 000 K6  &12  &14  &9  \\
+1 000 K7  &9  &12  &14  \\
+100 K6  &0  &0  &0  \\
+\end{DoxyTable}
+\hypertarget{dir_d999867b14defd5938807aaa4d873788_autotoc_md30}{}\doxysubsubsection{\texorpdfstring{O3 optimizacijos rezultatai (/\+Ox ≈ O3)}{O3 optimizacijos rezultatai (/\+Ox ≈ O3)}}\label{dir_d999867b14defd5938807aaa4d873788_autotoc_md30}
+\hypertarget{dir_d999867b14defd5938807aaa4d873788_autotoc_md31}{}\doxysubsubsubsection{\texorpdfstring{std\+::vector}{std\+::vector}}\label{dir_d999867b14defd5938807aaa4d873788_autotoc_md31}
+
+\begin{DoxyTable}{4}{}{}{1}
+\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Failas  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}\doxylink{struct_strategija}{Strategija} 1  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}\doxylink{struct_strategija}{Strategija} 2  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}\doxylink{struct_strategija}{Strategija} 3  \\
+10 000 000 K6  &47677  &47455  &48920  \\
+1 000 000 K6  &4781  &4879  &4754  \\
+100 000 K6  &467  &473  &485  \\
+10 000 K6  &44  &47  &64  \\
+1 000 K6  &7  &30  &6  \\
+1 000 K7  &7  &12  &7  \\
+100 K6  &0  &0  &0  \\
+\end{DoxyTable}
+\hypertarget{dir_d999867b14defd5938807aaa4d873788_autotoc_md32}{}\doxysubsubsubsection{\texorpdfstring{std\+::list}{std\+::list}}\label{dir_d999867b14defd5938807aaa4d873788_autotoc_md32}
+
+\begin{DoxyTable}{4}{}{}{1}
+\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Failas  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}\doxylink{struct_strategija}{Strategija} 1  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}\doxylink{struct_strategija}{Strategija} 2  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}\doxylink{struct_strategija}{Strategija} 3  \\
+10 000 000 K6  &44566  &43120  &46315  \\
+1 000 000 K6  &4411  &4138  &4360  \\
+100 000 K6  &440  &435  &433  \\
+10 000 K6  &49  &49  &49  \\
+1 000 K6  &11  &4  &6  \\
+1 000 K7  &8  &11  &6  \\
+100 K6  &0  &0  &0  \\
+\end{DoxyTable}

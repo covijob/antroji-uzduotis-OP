@@ -1,0 +1,28 @@
+\doxysection{konteineriu\+\_\+pasirinkimas.\+hpp}
+\hypertarget{konteineriu__pasirinkimas_8hpp_source}{}\label{konteineriu__pasirinkimas_8hpp_source}\index{C:/Users/mangi/source/repos/Pirmoji-\/uzduotis/konteineriu\_pasirinkimas.hpp@{C:/Users/mangi/source/repos/Pirmoji-\/uzduotis/konteineriu\_pasirinkimas.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <list>}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_vector_tag}{VectorTag}}\ \{\};}
+\DoxyCodeLine{00006\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_list_tag}{ListTag}}\ \{\};}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ Tag,\ \textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00009\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_container_selector}{ContainerSelector}};}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00012\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_container_selector}{ContainerSelector}}<\mbox{\hyperlink{struct_vector_tag}{VectorTag}},\ T>\ \{}
+\DoxyCodeLine{00013\ \ \ \ \ \textcolor{keyword}{using\ }type\ =\ std::vector<T>;}
+\DoxyCodeLine{00014\ \};}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00017\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_container_selector}{ContainerSelector}}<\mbox{\hyperlink{struct_list_tag}{ListTag}},\ T>\ \{}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keyword}{using\ }type\ =\ std::list<T>;}
+\DoxyCodeLine{00019\ \};}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ Tag,\ \textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00022\ \textcolor{keyword}{using\ }ContainerT\ =\ \textcolor{keyword}{typename}\ \mbox{\hyperlink{struct_container_selector}{ContainerSelector<Tag,\ T>::type}};}
+
+\end{DoxyCode}

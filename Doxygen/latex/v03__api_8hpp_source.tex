@@ -1,0 +1,46 @@
+\doxysection{v03\+\_\+api.\+hpp}
+\hypertarget{v03__api_8hpp_source}{}\label{v03__api_8hpp_source}\index{C:/Users/mangi/source/repos/Pirmoji-\/uzduotis/v03\_api.hpp@{C:/Users/mangi/source/repos/Pirmoji-\/uzduotis/v03\_api.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}studentai.hpp"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}konteineriu\_pasirinkimas.hpp"{}}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ Tag>}
+\DoxyCodeLine{00007\ ContainerT<Tag,\ Studentas>\ read\_all(\textcolor{keyword}{const}\ std::string\&\ path,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}*\ out\_read\_ms);}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ Tag>}
+\DoxyCodeLine{00010\ \textcolor{keywordtype}{void}\ split\_groups(ContainerT<Tag,\ Studentas>\&\ all,}
+\DoxyCodeLine{00011\ \ \ \ \ ContainerT<Tag,\ Studentas>\&\ varg,}
+\DoxyCodeLine{00012\ \ \ \ \ ContainerT<Tag,\ Studentas>\&\ kiet,}
+\DoxyCodeLine{00013\ \ \ \ \ \textcolor{keywordtype}{int}\ method,}
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}*\ out\_split\_ms);}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ Tag>}
+\DoxyCodeLine{00017\ \textcolor{keywordtype}{void}\ split\_groups\_remove(ContainerT<Tag,\ Studentas>\&\ all,}
+\DoxyCodeLine{00018\ \ \ \ \ ContainerT<Tag,\ Studentas>\&\ varg,}
+\DoxyCodeLine{00019\ \ \ \ \ ContainerT<Tag,\ Studentas>\&\ kiet,}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keywordtype}{int}\ method,}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}*\ out\_split\_ms);}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ Tag>}
+\DoxyCodeLine{00024\ \textcolor{keywordtype}{void}\ split\_groups\_partition(ContainerT<Tag,\ Studentas>\&\ all,}
+\DoxyCodeLine{00025\ \ \ \ \ ContainerT<Tag,\ Studentas>\&\ varg,}
+\DoxyCodeLine{00026\ \ \ \ \ ContainerT<Tag,\ Studentas>\&\ kiet,}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keywordtype}{int}\ method,}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}*\ out\_split\_ms);}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ Tag>}
+\DoxyCodeLine{00031\ \textcolor{keywordtype}{void}\ sort\_groups(ContainerT<Tag,\ Studentas>\&\ varg,}
+\DoxyCodeLine{00032\ \ \ \ \ ContainerT<Tag,\ Studentas>\&\ kiet,}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordtype}{int}\ rikiavimas,}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}*\ out\_sort\_ms);}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ Tag>}
+\DoxyCodeLine{00037\ \textcolor{keywordtype}{void}\ write\_groups(\textcolor{keyword}{const}\ ContainerT<Tag,\ Studentas>\&\ varg,}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keyword}{const}\ ContainerT<Tag,\ Studentas>\&\ kiet,}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordtype}{int}\ method,}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}*\ out\_write\_ms);}
+
+\end{DoxyCode}
