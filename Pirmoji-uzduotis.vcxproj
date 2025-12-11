@@ -134,6 +134,7 @@
     <ClCompile Include="ivestis.cpp" />
     <ClCompile Include="Pirmoji-uzduotis.cpp" />
     <ClCompile Include="skaiciavimas.cpp" />
+    <ClCompile Include="unit_tests.cpp" />
     <ClCompile Include="v03_api.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
@@ -147,6 +148,9 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\Desktop\catch_amalgamated.hpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="bench_runner.hpp" />
     <ClInclude Include="formatas.hpp" />
     <ClInclude Include="generatorius.hpp" />
