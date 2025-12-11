@@ -128,13 +128,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\Downloads\v3.11.0 source code\catchorg-Catch2-31b1109\extras\catch_amalgamated.cpp" />
     <ClCompile Include="bench_runner.cpp" />
     <ClCompile Include="formatas.cpp" />
     <ClCompile Include="generatorius.cpp" />
     <ClCompile Include="ivestis.cpp" />
     <ClCompile Include="Pirmoji-uzduotis.cpp" />
     <ClCompile Include="skaiciavimas.cpp" />
-    <ClCompile Include="unit_tests.cpp" />
+    <ClCompile Include="unit_tests.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="v03_api.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
@@ -148,9 +151,7 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\Desktop\catch_amalgamated.hpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
-    </ClInclude>
+    <ClInclude Include="..\..\..\Downloads\v3.11.0 source code\catchorg-Catch2-31b1109\extras\catch_amalgamated.hpp" />
     <ClInclude Include="bench_runner.hpp" />
     <ClInclude Include="formatas.hpp" />
     <ClInclude Include="generatorius.hpp" />
