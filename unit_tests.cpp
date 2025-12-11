@@ -6,3 +6,11 @@
 #include "sort.hpp"
 #include <vector>
 #include <algorithm>
+#include <iostream>
+
+
+int run_all_tests() {
+
+	std::cout << "test";
+	return 0;
+}

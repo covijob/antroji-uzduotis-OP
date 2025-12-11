@@ -11,6 +11,9 @@
 #include "v03_runner.hpp"
 #include "generatorius.hpp"
 #include "bench_runner.hpp"
+//#include "unit_tests.cpp"
+
+int run_all_tests();
 
 namespace fs = std::filesystem;
 
@@ -138,6 +141,7 @@ int main() {
     std::cout << "1 - Benchmark rezimas (bench_runner: visi txt, visos strategijos, visi konteineriai)\n";
     std::cout << "2 - Iprastas rezimas (darbas su vienu pasirinktu failu / generavimas)\n";
     std::cout << "3 - Rankine studentu ivestis\n";
+    std::cout << "4 – Unit Tests\n";
     std::cout << "Jusu pasirinkimas: ";
     std::cin >> rezimas;
 
@@ -158,6 +162,13 @@ int main() {
     else if (rezimas == 3) {
         rankine = true;
     }
+
+    else if (rezimas == 4) {
+        int result = run_all_tests();
+        std::cout << "\nTestai baigti. " << result << "\n";
+        return result;
+    }
+
     else {
         std::cerr << "Neteisingas rezimo pasirinkimas.\n";
         return 1;
