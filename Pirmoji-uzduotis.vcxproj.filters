@@ -53,6 +53,7 @@
     <None Include=".gitattributes" />
     <None Include=".gitignore" />
     <None Include="README.md" />
+    <None Include="v3.11.0 source code.zip" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="formatas.hpp">

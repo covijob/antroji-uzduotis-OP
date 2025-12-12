@@ -121,6 +121,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <Optimization>MaxSpeed</Optimization>
+      <AdditionalIncludeDirectories>"C:\Users\mangi\Downloads\v3.11.0 source code\catchorg-Catch2-31b1109\extras\catch_amalgamated.hpp";%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -149,6 +150,7 @@
     <None Include=".gitattributes" />
     <None Include=".gitignore" />
     <None Include="README.md" />
+    <None Include="v3.11.0 source code.zip" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Downloads\v3.11.0 source code\catchorg-Catch2-31b1109\extras\catch_amalgamated.hpp" />
