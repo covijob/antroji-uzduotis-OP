@@ -14,7 +14,7 @@ int run_all_tests() {
     return session.run();
 }
 
-// ===== TESTAI =====
+// TESTUKAI
 
 TEST_CASE("Studento vidurkis apskaiciuojamas teisingai") {
     SECTION("Keli ND pazymiai") {
