@@ -30,13 +30,17 @@ Programa gali veikti:
 *Nuadojama Visual Studio 2022*
 
 
-*exe failo dydis: 113Kb*
-
 ## Kalbos standartas
 
 C++20 Standart
 
-## 1.5 patch notes
+## v2.0 patch notes
+
+– Parengta projekto dokumentacija naudojant Doxygen ir įkelta į repozitoriją kaip atskiras HTML katalogas.
+– Įgyvendinti unit testai naudojant Catch2 C++ testavimo framework’ą, skirti pagrindinių klasių ir funkcijų funkcionalumo patikrinimui.
+– Testai integruoti kaip projekto dalis, demonstruojant testavimo paskirtį ir naudą programos patikimumui užtikrinti.
+
+## v1.5 patch notes
 
 - Sukurta bazinė abstrakti klasė Zmogus, aprašanti bendrus žmogaus duomenis (vardą ir pavardę).
 - Zmogus turi gryną virtualų metodą, todėl negalima sukurti jo objekto.
@@ -82,6 +86,13 @@ public:
 - Grąžintas rankinis duomenų įvedimas bei galimybį išvesti rezultatus į konsolę.
 - Atliktas naujas bench_mark testas_
 
+## v1.1 patch notes
+
+– Refaktorizuota programa, pereinant nuo struct pagrįstos realizacijos prie Studentas klasės, atlikti atitinkami pakeitimai visame kode.
+– Įgyvendintas našumo palyginimas tarp ankstesnės (struct) ir dabartinės (class) realizacijos, naudojant tą patį konteinerį (std::vector) ir vienodą skaidymo strategiją.
+– Atlikta eksperimentinė analizė su skirtingais kompiliatoriaus optimizavimo lygiais (-O1, -O2, -O3).
+
+
 ## Naudojimas
 
 # FAILŲ GENERAVIMAS:
@@ -101,6 +112,12 @@ public:
 2. Pasirinkti įvedimo ranka ražimą.
 
 *Papildomai galima visus rezultatus išvesti į konsolę*
+
+# Unit testai
+
+1. Paleisti programą.
+2. Pasirinkti režimą:
+   - **4** – Unit tests
 
 ### UŽDUOTIES ĮYVENDINIMO STRATEGIJOS
 
