@@ -1,16 +1,9 @@
-﻿#define CATCH_CONFIG_RUNNER
-#include "../catch_amalgamated.hpp"
+﻿#define CATCH_CONFIG_MAIN
+#include "catch_amalgamated.hpp"
 
 #include "studentai.hpp"
 #include "skaiciavimas.hpp"
 #include "sort.hpp"
-
-
-
-int run_all_tests() {
-    Catch::Session session;
-    return session.run();
-}
 
 
 TEST_CASE("Studento vidurkis apskaiciuojamas teisingai") {
@@ -52,3 +45,4 @@ TEST_CASE("sort.hpp: rusiavimas pagal pavarde ir varda", "[sort]") {
     REQUIRE(v[2].pavarde() == "Bbb");
     REQUIRE(v[2].vardas() == "Zita");
 }
+

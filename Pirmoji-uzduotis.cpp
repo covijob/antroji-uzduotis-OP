@@ -7,13 +7,12 @@
 #include <algorithm>
 #include <cctype>
 #include <limits>
+#include <cstdlib>
 
 #include "v03_runner.hpp"
 #include "generatorius.hpp"
 #include "bench_runner.hpp"
 //#include "unit_tests.cpp"
-
-int run_all_tests();
 
 namespace fs = std::filesystem;
 
@@ -141,7 +140,7 @@ int main() {
     std::cout << "1 - Benchmark rezimas (bench_runner: visi txt, visos strategijos, visi konteineriai)\n";
     std::cout << "2 - Iprastas rezimas (darbas su vienu pasirinktu failu / generavimas)\n";
     std::cout << "3 - Rankine studentu ivestis\n";
-    std::cout << "4 – Unit Tests\n";
+    std::cout << "4 - Unit Tests\n";
     std::cout << "Jusu pasirinkimas: ";
     std::cin >> rezimas;
 
@@ -164,16 +163,24 @@ int main() {
     }
 
     else if (rezimas == 4) {
-        int result = run_all_tests();
-        std::cout << "\nTestai baigti. " << result << "\n";
-        return result;
+        #ifdef _WIN32
+                int code = std::system(".\\build\\Release\\Pirmoji_uzduotis_tests.exe");
+        #else
+                int code = std::system("./build/Pirmoji_uzduotis_tests");
+        #endif
+
+                if (code != 0) {
+                    std::cout << "Testai nepraejo arba nepavyko paleisti (exit code=" << code << ")\n";
+                 
+
+                }
     }
+
 
     else {
         std::cerr << "Neteisingas rezimo pasirinkimas.\n";
         return 1;
     }
-
     std::string failas;
 
     if (rankine) {

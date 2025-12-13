@@ -1,0 +1,5 @@
+C:/Users/mangi/source/repos/Pirmoji-uzduotis/build/CMakeFiles/pirmoji_core.dir
+C:/Users/mangi/source/repos/Pirmoji-uzduotis/build/CMakeFiles/Pirmoji_uzduotis.dir
+C:/Users/mangi/source/repos/Pirmoji-uzduotis/build/CMakeFiles/Pirmoji_uzduotis_tests.dir
+C:/Users/mangi/source/repos/Pirmoji-uzduotis/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/mangi/source/repos/Pirmoji-uzduotis/build/CMakeFiles/ZERO_CHECK.dir
