@@ -212,3 +212,8 @@ FakesAssemblies/
 *.vcxproj
 *.vcxproj.filters
 *.vcxproj.user
+
+
+!README.txt
+!README.md
+!CMakeLists.txt

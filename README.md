@@ -92,6 +92,30 @@ public:
 – Įgyvendintas našumo palyginimas tarp ankstesnės (struct) ir dabartinės (class) realizacijos, naudojant tą patį konteinerį (std::vector) ir vienodą skaidymo strategiją.
 – Atlikta eksperimentinė analizė su skirtingais kompiliatoriaus optimizavimo lygiais (-O1, -O2, -O3).
 
+## Diegimo (build) instrukcija – CMake
+
+### 1. Atsidarykite terminalą projekto šakniniame kataloge
+Tai katalogas, kuriame yra `CMakeLists.txt`.
+
+
+### 2. (Rekomenduojama) Ištrinkite seną build katalogą
+
+Powershell:
+Remove-Item -Recurse -Force build
+
+### 3. Sugeneruokite CMake build failus
+
+cmake -S . -B build
+
+### 4. Sukompiliuokite projekt1 Release režimu
+
+cmake --build build --config Release
+
+### 5. Įsitikinkite, kad turite:
+
+- .\build\Release\Pirmoji_uzduotis.exe   
+- .\build\Release\Pirmoji_uzduotis_tests.exe
+
 
 ## Naudojimas
 
