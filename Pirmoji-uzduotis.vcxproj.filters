@@ -24,9 +24,6 @@
     <ClCompile Include="ivestis.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="skaiciavimas.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="v03_api.hpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -58,9 +55,6 @@
     <ClInclude Include="ivestis.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="skaiciavimas.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="sort.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -70,10 +64,10 @@
     <ClInclude Include="konteineriu_pasirinkimas.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="bench_runner.hpp">
+    <ClInclude Include="zmogus.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="zmogus.hpp">
+    <ClInclude Include="..\StudentuDll\studentu_dll.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

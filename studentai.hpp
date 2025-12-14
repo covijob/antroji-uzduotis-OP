@@ -6,6 +6,8 @@
 #include <iostream>
 
 #include "zmogus.hpp"
+#include "studentu_dll.h"
+
 
 class Studentas : public Zmogus {
 private:
@@ -106,9 +108,9 @@ public:
 
     double vidurkis() const {
         if (nd_.empty()) return 0.0;
-        double suma = std::accumulate(nd_.begin(), nd_.end(), 0.0);
-        return suma / nd_.size();
+        return dll_vidurkis(nd_.data(), static_cast<int>(nd_.size()));
     }
+
 
     double mediana() const {
         if (nd_.empty()) return 0.0;
