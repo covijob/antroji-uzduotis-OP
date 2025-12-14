@@ -1,5 +1,4 @@
 #include "v03_api.hpp"
-#include "skaiciavimas.hpp"
 #include "ivestis.hpp"
 #include "formatas.hpp"
 #include "sort.hpp"

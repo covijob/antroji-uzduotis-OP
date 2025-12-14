@@ -133,7 +133,6 @@
     <ClCompile Include="generatorius.cpp" />
     <ClCompile Include="ivestis.cpp" />
     <ClCompile Include="Pirmoji-uzduotis.cpp" />
-    <ClCompile Include="skaiciavimas.cpp" />
     <ClCompile Include="v03_api.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
@@ -151,7 +150,6 @@
     <ClInclude Include="generatorius.hpp" />
     <ClInclude Include="ivestis.hpp" />
     <ClInclude Include="konteineriu_pasirinkimas.hpp" />
-    <ClInclude Include="skaiciavimas.hpp" />
     <ClInclude Include="sort.hpp" />
     <ClInclude Include="studentai.hpp" />
     <ClInclude Include="zmogus.hpp" />

@@ -36,6 +36,11 @@ Programa gali veikti:
 
 C++20 Standart
 
+## 3.0 patch notes
+
+- Programos struktūros tvarkymas.
+- Kuriamas setup
+
 ## 1.5 patch notes
 
 - Sukurta bazinė abstrakti klasė Zmogus, aprašanti bendrus žmogaus duomenis (vardą ir pavardę).

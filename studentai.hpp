@@ -134,3 +134,11 @@ public:
         return is;
     }
 };
+
+inline double galutinis_vidurkis(const Studentas& s) {
+    return s.galutinis(1);  
+}
+
+inline double galutinis_mediana(const Studentas& s) {
+    return s.galutinis(2);  
+}
