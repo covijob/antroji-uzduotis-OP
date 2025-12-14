@@ -147,7 +147,6 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="bench_runner.hpp" />
     <ClInclude Include="formatas.hpp" />
     <ClInclude Include="generatorius.hpp" />
     <ClInclude Include="ivestis.hpp" />

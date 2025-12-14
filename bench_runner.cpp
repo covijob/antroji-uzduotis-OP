@@ -4,7 +4,6 @@
 #include <string>
 
 #include "v03_runner.hpp"
-#include "bench_runner.hpp"
 
 namespace fs = std::filesystem;
 

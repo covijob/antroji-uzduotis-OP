@@ -204,3 +204,5 @@ FakesAssemblies/
 
 # MSBuild logs
 *.binlog
+/kietiakai.txt
+kietiakai.txt

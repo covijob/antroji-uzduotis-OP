@@ -10,7 +10,6 @@
 
 #include "v03_runner.hpp"
 #include "generatorius.hpp"
-#include "bench_runner.hpp"
 
 namespace fs = std::filesystem;
 
@@ -24,6 +23,8 @@ std::size_t nustatyti_eiluciu_kieki(const std::string& failas) {
     }
     return n;
 }
+
+void run_benchmarks();
 
 void isvesti_faila_i_konsole(const std::string& pavadinimas, const std::string& antraste) {
     std::ifstream in(pavadinimas);
