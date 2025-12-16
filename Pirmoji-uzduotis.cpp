@@ -231,7 +231,7 @@ int main() {
                     txt_failai.push_back(p.filename().string());
                 }
             }
-
+            /5
             if (txt_failai.empty()) {
                 std::cerr << "Nerasta .txt failu.\n";
                 return 1;
