@@ -137,6 +137,8 @@
     <ClCompile Include="generatorius.cpp" />
     <ClCompile Include="ivestis.cpp" />
     <ClCompile Include="Pirmoji-uzduotis.cpp" />
+    <ClCompile Include="Studentu_Dll\dllmain.cpp" />
+    <ClCompile Include="Studentu_Dll\pch.cpp" />
     <ClCompile Include="v03_api.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
@@ -162,7 +164,14 @@
     <ClInclude Include="konteineriu_pasirinkimas.hpp" />
     <ClInclude Include="sort.hpp" />
     <ClInclude Include="studentai.hpp" />
+    <ClInclude Include="Studentu_Dll\framework.h" />
+    <ClInclude Include="Studentu_Dll\pch.h" />
     <ClInclude Include="zmogus.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Studentu_Dill\Studentu_Dill.vcxproj">
+      <Project>{1581864e-cd20-43cf-a7ee-9aa00812bd68}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
