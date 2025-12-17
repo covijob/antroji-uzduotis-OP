@@ -136,7 +136,10 @@
     <ClCompile Include="formatas.cpp" />
     <ClCompile Include="generatorius.cpp" />
     <ClCompile Include="ivestis.cpp" />
-    <ClCompile Include="Pirmoji-uzduotis.cpp" />
+    <ClCompile Include="Pirmoji-uzduotis.cpp">
+      <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">stdcpp20</LanguageStandard>
+      <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">stdcpp20</LanguageStandard>
+    </ClCompile>
     <ClCompile Include="Studentu_Dll\dllmain.cpp" />
     <ClCompile Include="Studentu_Dll\pch.cpp" />
     <ClCompile Include="v03_api.cpp">

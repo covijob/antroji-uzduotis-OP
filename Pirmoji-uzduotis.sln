@@ -10,6 +10,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Pirmoji-uzduotis", "Pirmoji
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Studentu_Dill", "..\Studentu_Dill\Studentu_Dill.vcxproj", "{1581864E-CD20-43CF-A7EE-9AA00812BD68}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Pirmoji-uzduotis_Setup", "..\Pirmoji-uzduotis_Setup\Pirmoji-uzduotis_Setup.vdproj", "{EB15F08C-8AD2-1009-31A0-702C73FDC437}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -34,6 +36,10 @@ Global
 		{1581864E-CD20-43CF-A7EE-9AA00812BD68}.Release|x64.Build.0 = Release|x64
 		{1581864E-CD20-43CF-A7EE-9AA00812BD68}.Release|x86.ActiveCfg = Release|Win32
 		{1581864E-CD20-43CF-A7EE-9AA00812BD68}.Release|x86.Build.0 = Release|Win32
+		{EB15F08C-8AD2-1009-31A0-702C73FDC437}.Debug|x64.ActiveCfg = Debug
+		{EB15F08C-8AD2-1009-31A0-702C73FDC437}.Debug|x86.ActiveCfg = Debug
+		{EB15F08C-8AD2-1009-31A0-702C73FDC437}.Release|x64.ActiveCfg = Release
+		{EB15F08C-8AD2-1009-31A0-702C73FDC437}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
