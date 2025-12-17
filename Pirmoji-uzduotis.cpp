@@ -31,12 +31,8 @@ std::size_t nustatyti_eiluciu_kieki(const std::string& failas) {
 
 void run_benchmarks();
 
-#include <iostream>
-#include <limits>
-
 static void pause_if_needed() {
 #ifdef _WIN32
-
     if (!_isatty(_fileno(stdin))) {
         std::cout << "\nSpausk Enter, kad uzdaryti...\n";
         std::cin.clear();
@@ -45,7 +41,6 @@ static void pause_if_needed() {
     }
 #endif
 }
-
 
 void isvesti_faila_i_konsole(const std::string& pavadinimas, const std::string& antraste) {
     std::ifstream in(pavadinimas);
@@ -320,7 +315,14 @@ int main() {
         isvesti_faila_i_konsole("kietiakai.txt", "Kietiakai");
         isvesti_faila_i_konsole("vargsiukai.txt", "Vargsiukai");
     }
+
+    // pirmas saugiklis (sutvarkytas): nuvalom '\n', tada laukiam Enter
+    std::cout << "\nSpauskite Enter, kad uzdaryti...\n";
+    std::cin.clear();
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cin.get();
+
+    // antras (paliekam kaip buvo)
     pause_if_needed();
     return 0;
-
 }
